@@ -1,0 +1,19 @@
+# Mac #
+.DS_Store
+
+# Maven #
+target/
+libs/
+package/
+
+# IDEA #
+.idea/
+*.iml
+
+# Eclipse #
+.settings/
+.metadata/
+.classpath
+.project
+Servers/
+jdbc.properties

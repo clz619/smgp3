@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>win.sinno</groupId>
+    <artifactId>smgp</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <description>
+        base on smgp3 prorocol sp's jar package
+    </description>
+
+    <modules>
+        <module>smgp3-common</module>
+        <module>smgp3-communication</module>
+        <module>smgp3-protocol</module>
+        <module>smgp3-sp</module>
+    </modules>
+
+    <developers>
+        <developer>
+            <id>clz</id>
+            <name>lizhong.chen</name>
+            <email>admin@chenlizhong.cn</email>
+        </developer>
+    </developers>
+
+    <properties>
+        <version.java>1.7</version.java>
+        <!--plugin-->
+        <version.maven.compiler>3.5.1</version.maven.compiler>
+        <version.maven.jar>3.0.2</version.maven.jar>
+        <version.maven.dependency>2.10</version.maven.dependency>
+        <!--other deps-->
+        <version.junit>4.12</version.junit>
+    </properties>
+
+    <build>
+        <plugins>
+            <!--compiler-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${version.maven.compiler}</version>
+                <configuration>
+                    <source>${version.java}</source>
+                    <target>${version.java}</target>
+                </configuration>
+            </plugin>
+
+            <!--jar-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${version.maven.jar}</version>
+                <configuration>
+                    <outputDirectory>${project.basedir}/package</outputDirectory>
+                </configuration>
+            </plugin>
+
+            <!--dependency-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${version.maven.dependency}</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/libs</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
