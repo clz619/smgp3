@@ -1,5 +1,7 @@
 package win.sinno.smgp3.protocol.body;
 
+import java.io.Serializable;
+
 /**
  * smgp message body
  *
@@ -7,6 +9,6 @@ package win.sinno.smgp3.protocol.body;
  * @version : 1.0
  * @since : 2017/2/9 下午2:48
  */
-public interface ISmgpBody {
+public interface ISmgpBody extends Serializable {
 
 }

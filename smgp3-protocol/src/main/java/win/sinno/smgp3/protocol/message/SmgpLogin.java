@@ -4,7 +4,7 @@ import win.sinno.smgp3.protocol.body.SmgpLoginBody;
 import win.sinno.smgp3.protocol.header.SmgpHeader;
 
 /**
- * TODO
+ * smgp Login message
  *
  * @author : admin@chenlizhong.cn
  * @version : 1.0
