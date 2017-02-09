@@ -17,5 +17,26 @@
         . smgp sp client
     </description>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>win.sinno</groupId>
+            <artifactId>smgp3-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>win.sinno</groupId>
+            <artifactId>smgp3-protocol</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>win.sinno</groupId>
+            <artifactId>smgp3-communication</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
 
 </project>
