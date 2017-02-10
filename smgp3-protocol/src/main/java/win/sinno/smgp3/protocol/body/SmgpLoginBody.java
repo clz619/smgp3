@@ -32,7 +32,7 @@ public class SmgpLoginBody implements ISmgpBody {
      *
      * @return
      */
-    private String authenticatorClient;
+    private byte[] authenticatorClient;
     /**
      * 客户端用来登录服务器端的登录模式。
      * 0＝发送短消息（send mode）；
@@ -74,11 +74,11 @@ public class SmgpLoginBody implements ISmgpBody {
     }
 
 
-    public String getAuthenticatorClient() {
+    public byte[] getAuthenticatorClient() {
         return authenticatorClient;
     }
 
-    public void setAuthenticatorClient(String authenticatorClient) {
+    public void setAuthenticatorClient(byte[] authenticatorClient) {
         this.authenticatorClient = authenticatorClient;
     }
 

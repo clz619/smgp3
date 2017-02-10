@@ -152,4 +152,17 @@ public class ByteUtilTest {
         ByteUtil.long2byte(ll, lbuf, offset);
         Assert.assertTrue(ll == ByteUtil.byte2long(lbuf, offset));
     }
+
+    @Test
+    public void testTimeStamp() {
+        int i = 301000000;
+
+        System.out.println(Integer.toHexString(i));
+
+        int t = 0x11F0E540;
+        System.out.println(t);
+
+        System.out.println(Integer.toHexString(1212000000));
+
+    }
 }

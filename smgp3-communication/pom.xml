@@ -33,7 +33,13 @@
             <artifactId>smgp3-protocol</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
+        <dependency>
+            <groupId>win.sinno</groupId>
+            <artifactId>sinno-common</artifactId>
+            <version>${version.sinno.common}</version>
+        </dependency>
+
     </dependencies>
 
 </project>
