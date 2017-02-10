@@ -9,4 +9,9 @@ package win.sinno.smgp3.protocol.body;
  */
 public class SmgpNullBody implements ISmgpNullBody {
 
+    private SmgpNullBody() {
+    }
+
+    //实例
+    public static final SmgpNullBody INSTANCE = new SmgpNullBody();
 }

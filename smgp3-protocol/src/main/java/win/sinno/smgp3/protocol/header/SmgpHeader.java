@@ -9,10 +9,12 @@ package win.sinno.smgp3.protocol.header;
  */
 public class SmgpHeader implements ISmgpHeader {
 
+    public static final int HEADER_LENGTH = 12;
+
     /**
      * 默认为header长度
      */
-    private int packetLength = 12;
+    private int packetLength = HEADER_LENGTH;
 
     private int requestId;
 

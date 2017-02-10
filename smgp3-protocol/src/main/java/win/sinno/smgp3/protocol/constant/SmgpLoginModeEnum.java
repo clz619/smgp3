@@ -7,7 +7,7 @@ package win.sinno.smgp3.protocol.constant;
  * @version : 1.0
  * @since : 2017/2/10 上午9:41
  */
-public enum SmgpLoginMode {
+public enum SmgpLoginModeEnum {
 
     SEND_MODE("sendMode", 0, "发送短消息"),
 
@@ -15,7 +15,7 @@ public enum SmgpLoginMode {
 
     TRANSMIT_MODE("transmitMode", 2, "收发短消息"),;
 
-    SmgpLoginMode(String name, int id, String descr) {
+    SmgpLoginModeEnum(String name, int id, String descr) {
         this.name = name;
         this.id = id;
         this.descr = descr;

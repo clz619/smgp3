@@ -10,7 +10,7 @@ import java.util.Map;
  * @version : 1.0
  * @since : 2017/2/10 上午9:52
  */
-public enum SmgpStatus {
+public enum SmgpStatusEnum {
 
     //-----
 
@@ -159,7 +159,7 @@ public enum SmgpStatus {
     //------unknow
     UNKNOW("unknow", 999, "未知错");
 
-    SmgpStatus(String name, int id, String descr) {
+    SmgpStatusEnum(String name, int id, String descr) {
         this.name = name;
         this.id = id;
         this.descr = descr;
@@ -183,35 +183,36 @@ public enum SmgpStatus {
         return descr;
     }
 
-    private static Map<Integer, SmgpStatus> smgpStatusMap = new HashMap<Integer, SmgpStatus>();
+    private static Map<Integer, SmgpStatusEnum> smgpStatusMap = new HashMap<Integer, SmgpStatusEnum>();
 
-    public static SmgpStatus getById(int id) {
+    public static SmgpStatusEnum getById(int id) {
 
-        SmgpStatus smgpStatus = smgpStatusMap.get(id);
+        SmgpStatusEnum smgpStatus = smgpStatusMap.get(id);
 
         if (smgpStatus == null) {
 
-            synchronized (SmgpStatus.class) {
+            synchronized (SmgpStatusEnum.class) {
 
                 smgpStatus = smgpStatusMap.get(id);
 
                 if (smgpStatus == null) {
-                    SmgpStatus[] smgpStatuses = SmgpStatus.values();
+                    SmgpStatusEnum[] smgpStatuses = SmgpStatusEnum.values();
 
-                    for (SmgpStatus status : smgpStatuses) {
+                    for (SmgpStatusEnum status : smgpStatuses) {
 
                         if (status.getId() == id) {
                             smgpStatus = status;
                             break;
                         }
                     }
+
+                    if (smgpStatus == null) {
+                        smgpStatus = UNKNOW;
+                    }
+
+                    smgpStatusMap.put(id, smgpStatus);
                 }
 
-                if (smgpStatus == null) {
-                    smgpStatus = UNKNOW;
-                }
-
-                smgpStatusMap.put(id, smgpStatus);
             }
         }
 

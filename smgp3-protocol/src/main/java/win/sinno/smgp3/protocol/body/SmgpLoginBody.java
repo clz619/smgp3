@@ -1,7 +1,7 @@
 package win.sinno.smgp3.protocol.body;
 
 import win.sinno.smgp3.protocol.constant.SmgpConfigs;
-import win.sinno.smgp3.protocol.constant.SmgpLoginMode;
+import win.sinno.smgp3.protocol.constant.SmgpLoginModeEnum;
 
 /**
  * login message body
@@ -40,7 +40,7 @@ public class SmgpLoginBody implements ISmgpBody {
      * 2＝收发短消息（transmit mode）；
      * 其它保留。
      * <p>
-     * {@link SmgpLoginMode}
+     * {@link SmgpLoginModeEnum}
      *
      * @return
      */

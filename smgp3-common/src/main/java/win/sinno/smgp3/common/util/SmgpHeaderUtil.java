@@ -30,4 +30,16 @@ public class SmgpHeaderUtil {
 
         return ByteUtil.byte2int(bytes, 4);
     }
+
+    /**
+     * 获取smgp消息 消息流水号
+     *
+     * @param bytes
+     * @return
+     */
+    public static int getMessageSequenceId(byte[] bytes) {
+
+        return ByteUtil.byte2int(bytes, 8);
+    }
+
 }

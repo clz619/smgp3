@@ -12,8 +12,17 @@ package win.sinno.smgp3.protocol.constant;
  */
 public class Tlv {
 
+
+    /**
+     * 标签值
+     * <p>
+     * {@link SmgpTagEnum}
+     */
     private int tag;
 
+    /**
+     * value 部分的长度
+     */
     private int length;
 
     private String value;

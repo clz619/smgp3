@@ -10,11 +10,30 @@ import win.sinno.smgp3.protocol.header.ISmgpHeader;
  * @version : 1.0
  * @since : 2017/2/9 下午2:26
  */
-public class SmgpMessage<HEAD extends ISmgpHeader, BODY extends ISmgpBody> {
+public class SmgpMessage<HEADER extends ISmgpHeader, BODY extends ISmgpBody> {
+
+    public SmgpMessage() {
+
+    }
+
+    public SmgpMessage(byte[] binary) {
+        this.binary = binary;
+    }
+
+    public SmgpMessage(HEADER header, BODY body) {
+        this.header = header;
+        this.body = body;
+    }
+    
+    public SmgpMessage(byte[] binary, HEADER header, BODY body) {
+        this.binary = binary;
+        this.header = header;
+        this.body = body;
+    }
 
     private byte[] binary;
 
-    private HEAD header;
+    private HEADER header;
 
     private BODY body;
 
@@ -26,11 +45,11 @@ public class SmgpMessage<HEAD extends ISmgpHeader, BODY extends ISmgpBody> {
         this.binary = binary;
     }
 
-    public HEAD getHeader() {
+    public HEADER getHeader() {
         return header;
     }
 
-    public void setHeader(HEAD header) {
+    public void setHeader(HEADER header) {
         this.header = header;
     }
 

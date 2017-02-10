@@ -9,12 +9,11 @@ import win.sinno.smgp3.protocol.message.SmgpMessage;
  * @version : 1.0
  * @since : 2017/2/9 下午4:18
  */
-public interface ISmgpMessageDecoder<MESSAGE extends SmgpMessage> {
+public interface ISmgpMessageDecoder<MSG extends SmgpMessage> {
 
     /**
-     *
      * @param bytes
      * @return
      */
-    MESSAGE decoder(byte[] bytes);
+    MSG decoder(byte[] bytes);
 }

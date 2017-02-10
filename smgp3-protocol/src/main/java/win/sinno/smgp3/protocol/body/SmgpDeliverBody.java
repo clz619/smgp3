@@ -13,32 +13,87 @@ public class SmgpDeliverBody implements ISmgpBody {
 
     //--------必选参数
     /**
-     * 短消息流水号
+     * 短消息流水号，用来唯一标识一条短消息。
+     * 该字段在短消息的转发处理流程中保持唯一。
+     * <p>
+     * MsgId字段包含以下三部分内容：
+     * SMGW代码：3字节（BCD码）
+     * <p>
+     * 编码规则如下：
+     * 3位区号（不足前添0）+2位设备类别+1位序号
+     * 区号：所在省长途区号
+     * <p>
+     * 设备类别：SMGW取06
+     * 序号：所在省的设备编码，例如第一个网关编号为1
+     * 时间：4字节（BCD码），格式为MMDDHHMM（月日时分）
+     * 序列号：3字节（BCD码），取值范围为000000～999999，从0开始，顺序累加，步长为1，循环使用。
+     * <p>
+     * 例如某SMGW的代码为010061，在2003年1月16日下午5时0分收到一条短消息，
+     * 这条短消息的MsgID为：0x01006101161700012345，
+     * 其中010061表示SMGW代码，
+     * 01161700表示接收时间，
+     * 012345表示消息序列号。
      */
     private String msgId;
 
     /**
      * 是否为状态报告
+     * <p>
+     * 是否为状态报告。
+     * 0＝不是状态报告；
+     * 1＝是状态报告；
      */
     private int isReport;
 
     /**
      * 短消息格式
+     * <p>
+     * 短消息内容体的编码格式。
+     * 0＝ASCII编码；
+     * 3＝短消息写卡操作；
+     * 4＝二进制短消息；
+     * 8＝UCS2编码；
+     * 15＝GB18030编码；
+     * 246（F6）＝(U)SIM相关消息；
+     * 其它保留。
+     * 对于文字短消息，要求MsgFormat＝0、8、15。对于回执消息，要求MsgFormat＝0。
      */
     private int msgFormat;
 
     /**
      * 短消息接收时间
+     * <p>
+     * SMGW接收到短消息的时间。格式为YYYYMMDDHHMMSS（年年年年月月日日时时分分秒秒）。
      */
     private String recvTime;
 
     /**
-     * 短消息发送号码
+     * 短信息发送方号码
+     * <p>
+     * 短消息发送方号码。
+     * 对于MT消息，SrcTermID格式为“118＋SP服务代码＋其它（可选）”，
+     * 例如SP服务代码为1234时，SrcTermID可以为1181234或118123456等。
+     * <p>
+     * <p>
+     * 对于MO消息，固定网中SrcTermID格式为“区号+号码（区号前添零）”，
+     * 例如02087310323，07558780808，移动网中SrcTermID格式为MSISDN号码格式。
+     * <p>
+     * 对于固定网点对点消息，主叫号码为普通终端时，SrcTermID格式为“区号+号码（区号前添零）”；
+     * 主叫号码为爱因平台时，SrcTermID格式为“10631＋区号+号码（区号前添零）”。
      */
     private String srcTermId;
 
     /**
      * 短消息接收号码
+     * <p>
+     * 对于MT消息，DestTermID连续存储DestTermIDCount个号码，每一个接收方号码为21位，
+     * 固定网中DestTermID格式为“区号+号码（区号前添零）”，
+     * 移动网中DestTermID格式为MSISDN号码格式，不足21位时应左对齐，右补0x00。
+     * <p>
+     * 对于MO消息，DestTermID格式为“118＋SP服务代码＋其它（可选）”。
+     * 对于点对点短消息，DestTermID格式为“区号+号码（区号前添零）” ，不足21位时应左对齐，右补0x00。
+     * <p>
+     * 对于固定网点对点消息，被叫号码为普通终端时，SrcTermID格式为“区号+号码（区号前添零）”；被叫号码为爱因平台时，SrcTermID格式为“10631＋区号+号码（区号前添零）”。
      */
     private String destTermId;
 
@@ -49,6 +104,9 @@ public class SmgpDeliverBody implements ISmgpBody {
 
     /**
      * 短消息内容
+     * <p>
+     * 当IsReport＝1时，MsgContent中内容为状态报告
+     * {@link win.sinno.smgp3.protocol.model.SmgpReportMessage}
      */
     private String msgContent;
 
