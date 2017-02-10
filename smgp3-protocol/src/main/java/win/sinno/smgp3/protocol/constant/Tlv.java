@@ -1,4 +1,4 @@
-package win.sinno.smgp3.protocol.define;
+package win.sinno.smgp3.protocol.constant;
 
 /**
  * 可选参数类型

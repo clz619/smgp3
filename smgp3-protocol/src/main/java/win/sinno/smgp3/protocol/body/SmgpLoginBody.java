@@ -1,5 +1,8 @@
 package win.sinno.smgp3.protocol.body;
 
+import win.sinno.smgp3.protocol.constant.SmgpConfigs;
+import win.sinno.smgp3.protocol.constant.SmgpLoginMode;
+
 /**
  * login message body
  *
@@ -36,12 +39,15 @@ public class SmgpLoginBody implements ISmgpBody {
      * 1＝接收短消息（receive mode）；
      * 2＝收发短消息（transmit mode）；
      * 其它保留。
+     * <p>
+     * {@link SmgpLoginMode}
      *
      * @return
      */
     private int loginMode;
     /**
      * 时间戳
+     * 例如3月1日0时0分0秒，用于MD5计算时为0301000000，此处转换为整型数即为11F0E540。
      *
      * @return
      */
@@ -49,10 +55,14 @@ public class SmgpLoginBody implements ISmgpBody {
 
     /**
      * 客户端支持的协议版本号
+     * 高4bit表示主版本号，低4bit表示次版本号。
+     * 例如0x13，表示协议版本号为1.3。
+     * <p>
+     * 当前协议版本为3.0
      *
      * @return
      */
-    private int clientVersion;
+    private int clientVersion = SmgpConfigs.CLIENT_VERSION;
 
 
     public String getClientId() {

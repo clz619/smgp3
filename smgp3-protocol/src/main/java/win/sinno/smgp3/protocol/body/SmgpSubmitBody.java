@@ -1,6 +1,6 @@
 package win.sinno.smgp3.protocol.body;
 
-import win.sinno.smgp3.protocol.define.Tlv;
+import win.sinno.smgp3.protocol.constant.Tlv;
 
 /**
  * submit message body

@@ -9,6 +9,9 @@ package win.sinno.smgp3.protocol.body;
  */
 public class SmgpLoginRespBody implements ISmgpBody {
 
+    /**
+     * 请求返回结果。响应包用来向请求包返回成功信息或者失败原因。
+     */
     private Integer status;
 
     private String authenticatorServer;

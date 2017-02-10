@@ -1,6 +1,6 @@
 package win.sinno.smgp3.protocol.header;
 
-import win.sinno.smgp3.protocol.define.SmgpRequestEnum;
+import win.sinno.smgp3.protocol.constant.SmgpRequestEnum;
 
 /**
  * smgp message header
