@@ -1,5 +1,8 @@
 package win.sinno.smgp3.protocol.constant;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * smgp3 request
  *
@@ -31,7 +34,9 @@ public enum SmgpRequestEnum {
 
     QUERY("Query", 0x00000007, "SP统计查询"),
 
-    QUERY_RESP("QueryResp", 0x80000007, "SP统计查询应答"),;
+    QUERY_RESP("QueryResp", 0x80000007, "SP统计查询应答"),
+
+    UNKNOW("Unknow", 0, "未知"),;
 
     SmgpRequestEnum(String name, int id, String descr) {
         this.name = name;
@@ -55,5 +60,42 @@ public enum SmgpRequestEnum {
 
     public String getDescr() {
         return descr;
+    }
+
+
+    private static Map<Integer, SmgpRequestEnum> requestEnumMap = new HashMap<Integer, SmgpRequestEnum>();
+
+    public static SmgpRequestEnum getById(int id) {
+
+        SmgpRequestEnum smgpRequestEnum = requestEnumMap.get(id);
+
+        if (smgpRequestEnum == null) {
+
+            synchronized (SmgpRequestEnum.class) {
+
+                smgpRequestEnum = requestEnumMap.get(id);
+
+                if (smgpRequestEnum == null) {
+                    SmgpRequestEnum[] requestEnums = SmgpRequestEnum.values();
+
+                    for (SmgpRequestEnum requestEnum : requestEnums) {
+
+                        if (requestEnum.getId() == id) {
+                            smgpRequestEnum = requestEnum;
+                            break;
+                        }
+                    }
+
+                    if (smgpRequestEnum == null) {
+                        smgpRequestEnum = UNKNOW;
+                    }
+
+                    requestEnumMap.put(id, smgpRequestEnum);
+                }
+
+            }
+        }
+
+        return smgpRequestEnum;
     }
 }

@@ -25,7 +25,7 @@ public interface ISmgpCommunication {
      *
      * @return
      */
-    byte[] receive();
+    void receive(byte[] message);
 
     ///////send
 

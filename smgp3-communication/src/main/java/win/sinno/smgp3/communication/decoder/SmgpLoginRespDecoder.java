@@ -43,11 +43,11 @@ public class SmgpLoginRespDecoder implements ISmgpMessageDecoder<SmgpLoginResp> 
 
         offset += 4;
 
-        //authServer
+        //authServer TODO paser
         offset += 16;
 
         //serverVersion
-        int serverVersion = ByteUtil.byte2int(bytes, offset);
+        int serverVersion = bytes[offset];
 
         body.setStatus(status);
         body.setServerVersion(serverVersion);
