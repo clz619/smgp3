@@ -1,7 +1,12 @@
 package win.sinno.smgp3.communication.factory;
 
 import win.sinno.common.util.DateUtil;
+import win.sinno.smgp3.common.util.SequenceIdGenerator;
+import win.sinno.smgp3.protocol.body.SmgpLoginBody;
 import win.sinno.smgp3.protocol.constant.SmgpConfigs;
+import win.sinno.smgp3.protocol.constant.SmgpLoginModeEnum;
+import win.sinno.smgp3.protocol.constant.SmgpRequestEnum;
+import win.sinno.smgp3.protocol.header.SmgpHeader;
 import win.sinno.smgp3.protocol.message.SmgpLogin;
 
 /**
@@ -15,18 +20,20 @@ public class SmgpLoginFactory {
 
     private static final String TIMESTAMP_FORMAT = "MMddHHmmss";
 
+    //固定长度为42
+    private static final int PACKAGE_LEN = 42;
+
     public static Builder builder() {
         return new Builder();
     }
 
     public static class Builder {
-        //        private
+
         private String spId;
 
         private String spPwd;
 
-        private int loginMode;
-
+        private int loginMode = SmgpLoginModeEnum.TRANSMIT_MODE.getId();
 
         private int clientVersion = SmgpConfigs.CLIENT_VERSION;
 
@@ -44,7 +51,23 @@ public class SmgpLoginFactory {
         }
 
         public SmgpLogin build() {
+
+            SmgpHeader header = new SmgpHeader();
+            header.setPacketLength(PACKAGE_LEN);
+            header.setRequestId(SmgpRequestEnum.LOGIN.getId());
+            header.setSequenceId(SequenceIdGenerator.nextSeqId());
+
+            SmgpLoginBody body = new SmgpLoginBody();
+            body.setClientId(spId);
+            body.setLoginMode(loginMode);
+            body.setTimeStamp(timestamp);
+            body.setTimeStampyyMMddmmss(timestampStr);
+            body.setClientVersion(clientVersion);
+
             SmgpLogin login = new SmgpLogin();
+            login.setSpPwd(spPwd);
+            login.setHeader(header);
+            login.setBody(body);
 
             return login;
         }

@@ -1,5 +1,8 @@
 package win.sinno.smgp3.communication.decoder;
 
+import win.sinno.smgp3.common.util.ByteUtil;
+import win.sinno.smgp3.protocol.body.SmgpLoginRespBody;
+import win.sinno.smgp3.protocol.header.SmgpHeader;
 import win.sinno.smgp3.protocol.message.SmgpLoginResp;
 
 /**
@@ -28,6 +31,30 @@ public class SmgpLoginRespDecoder implements ISmgpMessageDecoder<SmgpLoginResp> 
      */
     @Override
     public SmgpLoginResp decoder(byte[] bytes) {
-        return null;
+        SmgpLoginResp resp = new SmgpLoginResp(bytes);
+
+        SmgpHeader header = SmgpHeaderDecoder.decoder(bytes);
+
+        SmgpLoginRespBody body = new SmgpLoginRespBody();
+
+        //status
+        int offset = 12;
+        int status = ByteUtil.byte2int(bytes, offset);
+
+        offset += 4;
+
+        //authServer
+        offset += 16;
+
+        //serverVersion
+        int serverVersion = ByteUtil.byte2int(bytes, offset);
+
+        body.setStatus(status);
+        body.setServerVersion(serverVersion);
+
+        resp.setHeader(header);
+        resp.setBody(body);
+
+        return resp;
     }
 }

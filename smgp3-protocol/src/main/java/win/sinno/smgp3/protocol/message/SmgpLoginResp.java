@@ -11,4 +11,8 @@ import win.sinno.smgp3.protocol.header.SmgpHeader;
  * @since : 2017/2/9 下午4:06
  */
 public class SmgpLoginResp extends SmgpMessage<SmgpHeader, SmgpLoginRespBody> {
+
+    public SmgpLoginResp(byte[] binary) {
+        super(binary);
+    }
 }

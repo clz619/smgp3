@@ -1,6 +1,9 @@
 package win.sinno.smgp3.communication.encoder;
 
+import win.sinno.smgp3.common.util.AuthenticatorUtil;
+import win.sinno.smgp3.common.util.ByteUtil;
 import win.sinno.smgp3.protocol.body.SmgpLoginBody;
+import win.sinno.smgp3.protocol.header.SmgpHeader;
 import win.sinno.smgp3.protocol.message.SmgpLogin;
 
 /**
@@ -23,6 +26,7 @@ public class SmgpLoginEncoder implements ISmgpMessageEncoder<SmgpLogin> {
         return SmgpLoginEncoderHolder.HOLDER;
     }
 
+
     /**
      * 消息编码
      *
@@ -32,11 +36,45 @@ public class SmgpLoginEncoder implements ISmgpMessageEncoder<SmgpLogin> {
     @Override
     public byte[] encode(SmgpLogin smgpLogin) {
 
-        //smgp login body
-        SmgpLoginBody smgpLoginBody = smgpLogin.getBody();
+        String spPwd = smgpLogin.getSpPwd();
 
-        //TODO
-        return new byte[0];
+        SmgpHeader header = smgpLogin.getHeader();
+
+        SmgpLoginBody body = smgpLogin.getBody();
+
+        //验证
+        byte[] authClientBytes = AuthenticatorUtil.generateAuthClient(body.getClientId()
+                , spPwd, body.getTimeStampyyMMddmmss());
+
+        byte[] bytes = new byte[header.getPacketLength()];
+
+        int offset = 0;
+
+        //set header
+        SmgpHeaderEncoder.encoder(header, bytes, offset);
+        offset += 12;
+
+        //clientId
+        byte[] clientIdBytes = body.getClientId().getBytes();
+        System.arraycopy(clientIdBytes, 0, bytes, offset, clientIdBytes.length);
+        offset += 8;
+
+        //authClient
+        System.arraycopy(authClientBytes, 0, bytes, offset, authClientBytes.length);
+        offset += 16;
+
+        //loginMode
+        bytes[offset] = (byte) body.getLoginMode();
+        offset += 1;
+
+        //timestamp
+        ByteUtil.int2byte(body.getTimeStamp(), bytes, offset);
+        offset += 4;
+
+        //client version
+        bytes[offset] = (byte) body.getClientVersion();
+
+        return bytes;
     }
 
 }

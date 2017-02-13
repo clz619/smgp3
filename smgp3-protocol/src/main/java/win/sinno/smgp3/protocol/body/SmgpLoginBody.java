@@ -64,6 +64,8 @@ public class SmgpLoginBody implements ISmgpBody {
      */
     private int clientVersion = SmgpConfigs.CLIENT_VERSION;
 
+    private String timeStampyyMMddmmss;
+
 
     public String getClientId() {
         return clientId;
@@ -107,5 +109,13 @@ public class SmgpLoginBody implements ISmgpBody {
 
     public void setClientVersion(int clientVersion) {
         this.clientVersion = clientVersion;
+    }
+
+    public String getTimeStampyyMMddmmss() {
+        return timeStampyyMMddmmss;
+    }
+
+    public void setTimeStampyyMMddmmss(String timeStampyyMMddmmss) {
+        this.timeStampyyMMddmmss = timeStampyyMMddmmss;
     }
 }
