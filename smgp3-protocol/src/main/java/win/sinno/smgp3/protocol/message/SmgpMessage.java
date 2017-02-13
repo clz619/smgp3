@@ -3,6 +3,8 @@ package win.sinno.smgp3.protocol.message;
 import win.sinno.smgp3.protocol.body.ISmgpBody;
 import win.sinno.smgp3.protocol.header.ISmgpHeader;
 
+import java.util.Arrays;
+
 /**
  * smgp实体
  *
@@ -13,7 +15,6 @@ import win.sinno.smgp3.protocol.header.ISmgpHeader;
 public class SmgpMessage<HEADER extends ISmgpHeader, BODY extends ISmgpBody> {
 
     public SmgpMessage() {
-
     }
 
     public SmgpMessage(byte[] binary) {
@@ -24,7 +25,7 @@ public class SmgpMessage<HEADER extends ISmgpHeader, BODY extends ISmgpBody> {
         this.header = header;
         this.body = body;
     }
-    
+
     public SmgpMessage(byte[] binary, HEADER header, BODY body) {
         this.binary = binary;
         this.header = header;
@@ -59,5 +60,14 @@ public class SmgpMessage<HEADER extends ISmgpHeader, BODY extends ISmgpBody> {
 
     public void setBody(BODY body) {
         this.body = body;
+    }
+
+    @Override
+    public String toString() {
+        return "SmgpMessage{" +
+                "binary=" + Arrays.toString(binary) +
+                ", header=" + header +
+                ", body=" + body +
+                '}';
     }
 }

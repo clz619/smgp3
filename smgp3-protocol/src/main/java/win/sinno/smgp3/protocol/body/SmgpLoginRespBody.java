@@ -57,4 +57,13 @@ public class SmgpLoginRespBody implements ISmgpBody {
     public void setServerVersion(Integer serverVersion) {
         this.serverVersion = serverVersion;
     }
+
+    @Override
+    public String toString() {
+        return "SmgpLoginRespBody{" +
+                "status=" + status +
+                ", authenticatorServer='" + authenticatorServer + '\'' +
+                ", serverVersion=" + serverVersion +
+                '}';
+    }
 }

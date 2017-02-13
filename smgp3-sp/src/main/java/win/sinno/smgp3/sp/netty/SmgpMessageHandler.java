@@ -54,5 +54,6 @@ public class SmgpMessageHandler extends ChannelInboundHandlerAdapter {
 
         ctx.close();
 
+        smgpSp.reconnect();
     }
 }

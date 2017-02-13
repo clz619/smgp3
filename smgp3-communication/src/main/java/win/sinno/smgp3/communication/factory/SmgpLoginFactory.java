@@ -65,6 +65,7 @@ public class SmgpLoginFactory {
             body.setClientVersion(clientVersion);
 
             SmgpLogin login = new SmgpLogin();
+
             login.setSpPwd(spPwd);
             login.setHeader(header);
             login.setBody(body);

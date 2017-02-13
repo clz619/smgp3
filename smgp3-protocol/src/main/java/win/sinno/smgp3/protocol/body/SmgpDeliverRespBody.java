@@ -57,4 +57,12 @@ public class SmgpDeliverRespBody implements ISmgpBody {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "SmgpDeliverRespBody{" +
+                "msgId='" + msgId + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

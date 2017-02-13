@@ -1,5 +1,7 @@
 package win.sinno.smgp3.common.util;
 
+import win.sinno.smgp3.common.config.LoggerConfigs;
+
 /**
  * 验证工具
  *
@@ -38,19 +40,24 @@ public class AuthenticatorUtil {
 
         byte[] auths = new byte[len];
 
+        int offset = 0;
+
         // set byte val
-        System.arraycopy(spIdBytes, 0, auths, 0, spIdBytes.length);
+        System.arraycopy(spIdBytes, 0, auths, offset, spIdBytes.length);
+        offset += spIdBytes.length;
 
-        for (int i = 0; i < 7; i++) {
-            auths[spIdBytes.length + i] = 0x00;
-        }
+        offset += 7;
 
-        System.arraycopy(spPwdBytes, 0, auths, spIdBytes.length + 7, spPwdBytes.length);
+        System.arraycopy(spPwdBytes, 0, auths, offset, spPwdBytes.length);
+
+        offset += spPwdBytes.length;
 
         System.arraycopy(timestampBytes, 0, auths,
-                spIdBytes.length + 7 + spPwdBytes.length, timestampBytes.length);
+                offset, timestampBytes.length);
 
-        byte[] authMd5 = new MD5Util().getMD5ofBytes(auths, len);
+        LoggerConfigs.SMGP3_LOG.info("authClient un md5:{}", auths);
+
+        byte[] authMd5 = new MD5Util().getMD5String(auths);
 
         return authMd5;
     }

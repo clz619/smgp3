@@ -8,16 +8,22 @@ import win.sinno.smgp3.sp.SmgpSp;
  */
 public class SmgpSpTest {
 
-    private static String host;
+    private static String host = "";
     private static int port = 8890;
-    private static String spId;
-    private static String spPwd;
+    private static String spId = "";
+    private static String spPwd = "";
 
     @Test
     public void loginTest() {
         SmgpSp smgpSp = new SmgpSp("test", host, port, spId, spPwd);
         try {
-            smgpSp.startConnect();
+            smgpSp.connect();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Thread.sleep(200000l);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

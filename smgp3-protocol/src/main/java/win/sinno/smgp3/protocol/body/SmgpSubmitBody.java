@@ -503,4 +503,41 @@ public class SmgpSubmitBody implements ISmgpBody {
     public void setmServiceId(Tlv mServiceId) {
         this.mServiceId = mServiceId;
     }
+
+    @Override
+    public String toString() {
+        return "SmgpSubmitBody{" +
+                "msgType=" + msgType +
+                ", needReport=" + needReport +
+                ", priority=" + priority +
+                ", serviceId='" + serviceId + '\'' +
+                ", feeType='" + feeType + '\'' +
+                ", feeCode='" + feeCode + '\'' +
+                ", fixedFee='" + fixedFee + '\'' +
+                ", msgFormat=" + msgFormat +
+                ", validTime='" + validTime + '\'' +
+                ", atTime='" + atTime + '\'' +
+                ", srcTermId='" + srcTermId + '\'' +
+                ", chargeTermId='" + chargeTermId + '\'' +
+                ", destTermIdCount=" + destTermIdCount +
+                ", destTermId='" + destTermId + '\'' +
+                ", msgLength=" + msgLength +
+                ", msgContent='" + msgContent + '\'' +
+                ", reserve='" + reserve + '\'' +
+                ", tpPid=" + tpPid +
+                ", tpUdhi=" + tpUdhi +
+                ", linkId=" + linkId +
+                ", msgSrc=" + msgSrc +
+                ", chargeUserType=" + chargeUserType +
+                ", chargeTermType=" + chargeTermType +
+                ", changeTermPseudo=" + changeTermPseudo +
+                ", destTermType=" + destTermType +
+                ", destTermPseudo=" + destTermPseudo +
+                ", pkTotal=" + pkTotal +
+                ", pkNumber=" + pkNumber +
+                ", submitMsgType=" + submitMsgType +
+                ", spDealResult=" + spDealResult +
+                ", mServiceId=" + mServiceId +
+                '}';
+    }
 }

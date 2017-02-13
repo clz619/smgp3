@@ -15,4 +15,6 @@ public class SmgpLoginResp extends SmgpMessage<SmgpHeader, SmgpLoginRespBody> {
     public SmgpLoginResp(byte[] binary) {
         super(binary);
     }
+
+
 }

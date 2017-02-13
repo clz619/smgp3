@@ -43,4 +43,13 @@ public class SmgpHeader implements ISmgpHeader {
     public void setSequenceId(int sequenceId) {
         this.sequenceId = sequenceId;
     }
+
+    @Override
+    public String toString() {
+        return "SmgpHeader{" +
+                "packetLength=" + packetLength +
+                ", requestId=" + requestId +
+                ", sequenceId=" + sequenceId +
+                '}';
+    }
 }

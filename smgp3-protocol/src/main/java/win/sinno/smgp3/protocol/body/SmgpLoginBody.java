@@ -3,6 +3,8 @@ package win.sinno.smgp3.protocol.body;
 import win.sinno.smgp3.protocol.constant.SmgpConfigs;
 import win.sinno.smgp3.protocol.constant.SmgpLoginModeEnum;
 
+import java.util.Arrays;
+
 /**
  * login message body
  *
@@ -117,5 +119,17 @@ public class SmgpLoginBody implements ISmgpBody {
 
     public void setTimeStampyyMMddmmss(String timeStampyyMMddmmss) {
         this.timeStampyyMMddmmss = timeStampyyMMddmmss;
+    }
+
+    @Override
+    public String toString() {
+        return "SmgpLoginBody{" +
+                "clientId='" + clientId + '\'' +
+                ", authenticatorClient=" + Arrays.toString(authenticatorClient) +
+                ", loginMode=" + loginMode +
+                ", timeStamp=" + timeStamp +
+                ", clientVersion=" + clientVersion +
+                ", timeStampyyMMddmmss='" + timeStampyyMMddmmss + '\'' +
+                '}';
     }
 }

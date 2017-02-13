@@ -12,4 +12,8 @@ import win.sinno.smgp3.protocol.header.SmgpHeader;
  */
 public class SmgpActiveTest extends SmgpMessage<SmgpHeader, SmgpNullBody> {
 
+    public SmgpActiveTest(SmgpHeader header) {
+        super(header, SmgpNullBody.INSTANCE);
+    }
+
 }

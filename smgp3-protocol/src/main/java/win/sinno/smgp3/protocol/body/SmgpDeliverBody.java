@@ -279,4 +279,26 @@ public class SmgpDeliverBody implements ISmgpBody {
     public void setSpDealResult(Tlv spDealResult) {
         this.spDealResult = spDealResult;
     }
+
+    @Override
+    public String toString() {
+        return "SmgpDeliverBody{" +
+                "msgId='" + msgId + '\'' +
+                ", isReport=" + isReport +
+                ", msgFormat=" + msgFormat +
+                ", recvTime='" + recvTime + '\'' +
+                ", srcTermId='" + srcTermId + '\'' +
+                ", destTermId='" + destTermId + '\'' +
+                ", msgLength=" + msgLength +
+                ", msgContent='" + msgContent + '\'' +
+                ", reserve='" + reserve + '\'' +
+                ", tpPid=" + tpPid +
+                ", tpUdhi=" + tpUdhi +
+                ", linkId=" + linkId +
+                ", srcTermType=" + srcTermType +
+                ", srcTermPseudo=" + srcTermPseudo +
+                ", submitMsgType=" + submitMsgType +
+                ", spDealResult=" + spDealResult +
+                '}';
+    }
 }
