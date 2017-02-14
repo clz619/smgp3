@@ -15,6 +15,17 @@ import win.sinno.smgp3.protocol.message.SmgpSubmit;
  */
 public class SmgpSubmitEncoder implements ISmgpMessageEncoder<SmgpSubmit> {
 
+    private SmgpSubmitEncoder() {
+    }
+
+    private static class SmgpSubmitEncoderHolder {
+        private static final SmgpSubmitEncoder INSTANCE = new SmgpSubmitEncoder();
+    }
+
+    public static SmgpSubmitEncoder getInstance() {
+        return SmgpSubmitEncoderHolder.INSTANCE;
+    }
+
     /**
      * 消息编码
      *

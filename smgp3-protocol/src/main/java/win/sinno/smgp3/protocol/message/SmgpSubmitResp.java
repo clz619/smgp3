@@ -12,4 +12,12 @@ import win.sinno.smgp3.protocol.header.SmgpHeader;
  */
 public class SmgpSubmitResp extends SmgpMessage<SmgpHeader, SmgpSubmitRespBody> {
 
+    public SmgpSubmitResp(SmgpHeader header, SmgpSubmitRespBody body) {
+        super(header, body);
+    }
+
+    public SmgpSubmitResp(byte[] bytes, SmgpHeader header, SmgpSubmitRespBody body) {
+        super(bytes, header, body);
+    }
+
 }
