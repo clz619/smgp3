@@ -11,4 +11,10 @@ import win.sinno.smgp3.protocol.header.SmgpHeader;
  * @since : 2017/2/9 下午5:27
  */
 public class SmgpSubmit extends SmgpMessage<SmgpHeader, SmgpSubmitBody> {
+    public SmgpSubmit() {
+    }
+
+    public SmgpSubmit(SmgpHeader header, SmgpSubmitBody body) {
+        super(header, body);
+    }
 }

@@ -53,7 +53,7 @@ public class SmgpSubmitBody implements ISmgpBody {
      * 对于从WEB上发送的点对点短消息，要求业务代码为 “PC2P”，
      * 其它业务代码由SP自定义。
      */
-    private String serviceId;
+    private String serviceId = "ddy";
 
     /**
      * 对计费用户采取的收费类型。
@@ -72,7 +72,7 @@ public class SmgpSubmitBody implements ISmgpBody {
      * <p>
      * 其它保留。
      */
-    private String feeType;
+    private String feeType = "00";
 
     /**
      * FIXME
@@ -82,12 +82,12 @@ public class SmgpSubmitBody implements ISmgpBody {
      * 每条短消息费率，单位为“分”。
      * 对于MO消息或点对点短消息，该字段无效；对于MT消息
      */
-    private String feeCode;
+    private String feeCode = "0";
 
     /**
      * 短消息的包月费/封顶费，单位为“分”。
      */
-    private String fixedFee;
+    private String fixedFee = "0";
 
     /**
      * 短消息内容体的编码格式。
@@ -108,14 +108,14 @@ public class SmgpSubmitBody implements ISmgpBody {
      * 短消息有效时间，格式遵循SMPP3.3以上版本协议。 FIXME
      * 短消息有效时间在转发过程中保持不变。
      */
-    private String validTime;
+    private String validTime = "";
 
     /**
      * FIXME
      * 短消息定时发送时间，格式遵循SMPP3.3以上版本协议。
      * 短消息定时发送时间在转发过程中保持不变。
      */
-    private String atTime;
+    private String atTime = "";
 
     /**
      * 短信息发送方号码
