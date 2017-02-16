@@ -15,5 +15,5 @@ public interface ISmgpMessageDecoder<MSG extends SmgpMessage> {
      * @param bytes
      * @return
      */
-    MSG decoder(byte[] bytes);
+    MSG decode(byte[] bytes);
 }

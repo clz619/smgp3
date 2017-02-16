@@ -15,6 +15,10 @@ import win.sinno.smgp3.protocol.message.SmgpSubmit;
  */
 public class SmgpSubmitFactory {
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
 
     public static class Builder {
 
@@ -48,8 +52,9 @@ public class SmgpSubmitFactory {
             SmgpSubmitBody body = new SmgpSubmitBody();
             body.setDestTermId(mobile);
             body.setMsgContent(msgContent);
-            body.setServiceId(serviceId);
-
+            if (serviceId != null) {
+                body.setServiceId(serviceId);
+            }
             if (validTime != null) {
                 body.setValidTime(validTime);
             }
@@ -58,8 +63,9 @@ public class SmgpSubmitFactory {
                 body.setAtTime(atTime);
             }
 
-            body.setSrcTermId("118" + spId);
-
+            if (srcTermId != null) {
+                body.setSrcTermId(srcTermId);
+            }
             if (chargeTermId != null) {
                 body.setChargeTermId(chargeTermId);
             }

@@ -37,7 +37,7 @@ public class SmgpByte2MessageDecoder extends ByteToMessageDecoder {
 
         if (byteBufLen < SmgpHeader.HEADER_LENGTH) {
             //小于协议头长度的，不做处理
-            LOG.warn("smgp byte 2 message decoder readable byte buf len:{} < smgp header len:12.wait transport.undo", byteBufLen);
+            LOG.warn("smgp byte 2 message decode readable byte buf len:{} < smgp header len:12.wait transport.undo", byteBufLen);
             return;
         }
 
@@ -48,13 +48,13 @@ public class SmgpByte2MessageDecoder extends ByteToMessageDecoder {
 
         if (packetLen <= 0) {
             //协议 长度负数
-            LOG.warn("smgp byte 2 message decoder get header packet len:{} is negative.undo", packetLen);
+            LOG.warn("smgp byte 2 message decode get header packet len:{} is negative.undo", packetLen);
             return;
         }
 
         if (byteBufLen < packetLen) {
             //未传输完的，不做处理
-            LOG.warn("smgp byte 2 message decoder readable byte buf len:{} < smgp packet len:{}.wait transport.undo", new Object[]{byteBufLen, packetLen});
+            LOG.warn("smgp byte 2 message decode readable byte buf len:{} < smgp packet len:{}.wait transport.undo", new Object[]{byteBufLen, packetLen});
             return;
         }
 

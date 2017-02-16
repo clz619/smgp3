@@ -4,7 +4,7 @@ import win.sinno.smgp3.common.util.ByteUtil;
 import win.sinno.smgp3.protocol.header.SmgpHeader;
 
 /**
- * smgp header encoder 编码器
+ * smgp header encode 编码器
  *
  * @author : admin@chenlizhong.cn
  * @version : 1.0
@@ -18,7 +18,7 @@ public class SmgpHeaderEncoder {
      * @param smgpHeader
      * @return
      */
-    public static byte[] encoder(SmgpHeader smgpHeader) {
+    public static byte[] encode(SmgpHeader smgpHeader) {
 
         byte[] bytes = new byte[12];
 
@@ -40,7 +40,7 @@ public class SmgpHeaderEncoder {
      * @param bytes
      * @param offset
      */
-    public static void encoder(SmgpHeader smgpHeader, byte[] bytes, int offset) {
+    public static void encode(SmgpHeader smgpHeader, byte[] bytes, int offset) {
 
         int packetLength = smgpHeader.getPacketLength();
         int requestId = smgpHeader.getRequestId();

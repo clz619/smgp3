@@ -4,7 +4,7 @@ import win.sinno.smgp3.common.util.SmgpHeaderUtil;
 import win.sinno.smgp3.protocol.header.SmgpHeader;
 
 /**
- * header decoder
+ * header decode
  *
  * @author : admin@chenlizhong.cn
  * @version : 1.0
@@ -13,12 +13,12 @@ import win.sinno.smgp3.protocol.header.SmgpHeader;
 public class SmgpHeaderDecoder {
 
     /**
-     * smgp header decoder
+     * smgp header decode
      *
      * @param bytes
      * @return
      */
-    public static SmgpHeader decoder(byte[] bytes) {
+    public static SmgpHeader decode(byte[] bytes) {
         SmgpHeader header = new SmgpHeader();
 
         int packgeLength = SmgpHeaderUtil.getMessagePacketLength(bytes);

@@ -1,6 +1,6 @@
 package win.sinno.smgp3.protocol.body;
 
-import win.sinno.smgp3.protocol.constant.Tlv;
+import win.sinno.smgp3.protocol.model.TpUdhiMessage;
 
 /**
  * submit message body
@@ -149,7 +149,7 @@ public class SmgpSubmitBody implements ISmgpBody {
      * <p>
      * 短消息接收号码总数（≤100），用于SP实现群发短消息。
      */
-    private int destTermIdCount;
+    private int destTermIdCount = 1;
 
     /**
      * 短消息接收号码
@@ -187,74 +187,13 @@ public class SmgpSubmitBody implements ISmgpBody {
     //------------可选参数
 
     /**
-     * GSM协议类型
+     * 用户数据头标识
      */
-    private Tlv tpPid;
+    private int tpudhi;
 
-    /**
-     * GSM协议类型
-     */
-    private Tlv tpUdhi;
 
-    /**
-     * 交易标识
-     */
-    private Tlv linkId;
+    private TpUdhiMessage tpUdhiMessage;
 
-    /**
-     * 信息内容的来源
-     */
-    private Tlv msgSrc;
-
-    /**
-     * 计费用户类型
-     */
-    private Tlv chargeUserType;
-
-    /**
-     * 计费用户的号码类型
-     */
-    private Tlv chargeTermType;
-
-    /**
-     * 计费用户的伪码
-     */
-    private Tlv changeTermPseudo;
-
-    /**
-     * 短消息接收方号码的类型
-     */
-    private Tlv destTermType;
-
-    /**
-     * 短消息接收方的伪码
-     */
-    private Tlv destTermPseudo;
-
-    /**
-     * 相同MsgID的消息总条数
-     */
-    private Tlv pkTotal;
-
-    /**
-     * 相同MsgID的消息序号
-     */
-    private Tlv pkNumber;
-
-    /**
-     * SP发送的消息类型
-     */
-    private Tlv submitMsgType;
-
-    /**
-     * sp对消息的处理结果
-     */
-    private Tlv spDealResult;
-
-    /**
-     * 业务代码(用于移动网业务)
-     */
-    private Tlv mServiceId;
 
     public int getMsgType() {
         return msgType;
@@ -392,152 +331,19 @@ public class SmgpSubmitBody implements ISmgpBody {
         this.reserve = reserve;
     }
 
-    public Tlv getTpPid() {
-        return tpPid;
+    public int getTpudhi() {
+        return tpudhi;
     }
 
-    public void setTpPid(Tlv tpPid) {
-        this.tpPid = tpPid;
+    public void setTpudhi(int tpudhi) {
+        this.tpudhi = tpudhi;
     }
 
-    public Tlv getTpUdhi() {
-        return tpUdhi;
+    public TpUdhiMessage getTpUdhiMessage() {
+        return tpUdhiMessage;
     }
 
-    public void setTpUdhi(Tlv tpUdhi) {
-        this.tpUdhi = tpUdhi;
-    }
-
-    public Tlv getLinkId() {
-        return linkId;
-    }
-
-    public void setLinkId(Tlv linkId) {
-        this.linkId = linkId;
-    }
-
-    public Tlv getMsgSrc() {
-        return msgSrc;
-    }
-
-    public void setMsgSrc(Tlv msgSrc) {
-        this.msgSrc = msgSrc;
-    }
-
-    public Tlv getChargeUserType() {
-        return chargeUserType;
-    }
-
-    public void setChargeUserType(Tlv chargeUserType) {
-        this.chargeUserType = chargeUserType;
-    }
-
-    public Tlv getChargeTermType() {
-        return chargeTermType;
-    }
-
-    public void setChargeTermType(Tlv chargeTermType) {
-        this.chargeTermType = chargeTermType;
-    }
-
-    public Tlv getChangeTermPseudo() {
-        return changeTermPseudo;
-    }
-
-    public void setChangeTermPseudo(Tlv changeTermPseudo) {
-        this.changeTermPseudo = changeTermPseudo;
-    }
-
-    public Tlv getDestTermType() {
-        return destTermType;
-    }
-
-    public void setDestTermType(Tlv destTermType) {
-        this.destTermType = destTermType;
-    }
-
-    public Tlv getDestTermPseudo() {
-        return destTermPseudo;
-    }
-
-    public void setDestTermPseudo(Tlv destTermPseudo) {
-        this.destTermPseudo = destTermPseudo;
-    }
-
-    public Tlv getPkTotal() {
-        return pkTotal;
-    }
-
-    public void setPkTotal(Tlv pkTotal) {
-        this.pkTotal = pkTotal;
-    }
-
-    public Tlv getPkNumber() {
-        return pkNumber;
-    }
-
-    public void setPkNumber(Tlv pkNumber) {
-        this.pkNumber = pkNumber;
-    }
-
-    public Tlv getSubmitMsgType() {
-        return submitMsgType;
-    }
-
-    public void setSubmitMsgType(Tlv submitMsgType) {
-        this.submitMsgType = submitMsgType;
-    }
-
-    public Tlv getSpDealResult() {
-        return spDealResult;
-    }
-
-    public void setSpDealResult(Tlv spDealResult) {
-        this.spDealResult = spDealResult;
-    }
-
-    public Tlv getmServiceId() {
-        return mServiceId;
-    }
-
-    public void setmServiceId(Tlv mServiceId) {
-        this.mServiceId = mServiceId;
-    }
-
-    @Override
-    public String toString() {
-        return "SmgpSubmitBody{" +
-                "msgType=" + msgType +
-                ", needReport=" + needReport +
-                ", priority=" + priority +
-                ", serviceId='" + serviceId + '\'' +
-                ", feeType='" + feeType + '\'' +
-                ", feeCode='" + feeCode + '\'' +
-                ", fixedFee='" + fixedFee + '\'' +
-                ", msgFormat=" + msgFormat +
-                ", validTime='" + validTime + '\'' +
-                ", atTime='" + atTime + '\'' +
-                ", srcTermId='" + srcTermId + '\'' +
-                ", chargeTermId='" + chargeTermId + '\'' +
-                ", destTermIdCount=" + destTermIdCount +
-                ", destTermId='" + destTermId + '\'' +
-                ", msgLength=" + msgLength +
-                ", msgContent='" + msgContent + '\'' +
-                ", reserve='" + reserve + '\'' +
-                ", tpPid=" + tpPid +
-                ", tpUdhi=" + tpUdhi +
-                ", linkId=" + linkId +
-                ", msgSrc=" + msgSrc +
-                ", chargeUserType=" + chargeUserType +
-                ", chargeTermType=" + chargeTermType +
-                ", changeTermPseudo=" + changeTermPseudo +
-                ", destTermType=" + destTermType +
-                ", destTermPseudo=" + destTermPseudo +
-                ", pkTotal=" + pkTotal +
-                ", pkNumber=" + pkNumber +
-                ", submitMsgType=" + submitMsgType +
-                ", spDealResult=" + spDealResult +
-                ", mServiceId=" + mServiceId +
-                '}';
+    public void setTpUdhiMessage(TpUdhiMessage tpUdhiMessage) {
+        this.tpUdhiMessage = tpUdhiMessage;
     }
 }

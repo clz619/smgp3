@@ -11,6 +11,21 @@ public class SmgpReportMessage {
 
     /**
      * 状态报告对应原短消息的MsgID
+     * <p>
+     * 短消息流水号，用来唯一标识一条短消息。
+     * 该字段在短消息的转发处理流程中保持唯一。
+     * MsgId字段包含以下三部分内容：
+     * SMGW代码：3字节（BCD码）
+     * 编码规则如下：
+     * 3位区号（不足前添0）+2位设备类别+1位序号
+     * 区号：所在省长途区号
+     * 设备类别：SMGW取06
+     * 序号：所在省的设备编码，例如第一个网关编号为1
+     * 时间：4字节（BCD码），格式为MMDDHHMM（月日时分）
+     * 序列号：3字节（BCD码），取值范围为000000～999999，从0开始，顺序累加，步长为1，循环使用。
+     * 例如某SMGW的代码为010061，在2003年1月16日下午5时0分收到一条短消息，这条短消息的MsgID为：0x01006101161700012345，其中010061表示SMGW代码，01161700表示接收时间，012345表示消息序列号。
+     * <p>
+     * 字符串长度 为 20
      */
     private String id;
 
@@ -49,7 +64,7 @@ public class SmgpReportMessage {
      * 前3个字节，表示短消息长度（用ASCII码表示），
      * 后17个字节表示短消息的内容（保证内容不出现乱码）
      */
-    private String txt;
+    private String text;
 
     public String getId() {
         return id;
@@ -107,11 +122,25 @@ public class SmgpReportMessage {
         this.err = err;
     }
 
-    public String getTxt() {
-        return txt;
+    public String getText() {
+        return text;
     }
 
-    public void setTxt(String txt) {
-        this.txt = txt;
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return "SmgpReportMessage{" +
+                "id='" + id + '\'' +
+                ", sub='" + sub + '\'' +
+                ", dlvrd='" + dlvrd + '\'' +
+                ", submitDate='" + submitDate + '\'' +
+                ", doneDate='" + doneDate + '\'' +
+                ", stat='" + stat + '\'' +
+                ", err='" + err + '\'' +
+                ", text='" + text + '\'' +
+                '}';
     }
 }

@@ -41,7 +41,6 @@ public class SmgpMessageHandler extends ChannelInboundHandlerAdapter {
     /**
      * 异常捕获，关闭连接，并进行重连
      * <p>
-     * TODO 进行重连
      *
      * @param ctx
      * @param cause

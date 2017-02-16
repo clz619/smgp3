@@ -1,5 +1,8 @@
 package win.sinno.smgp3.protocol.constant;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * smgp tag
  *
@@ -60,5 +63,38 @@ public enum SmgpTagEnum {
 
     public int getVal() {
         return val;
+    }
+
+
+    private static Map<Integer, SmgpTagEnum> smgpTagMap = new HashMap<Integer, SmgpTagEnum>();
+
+    public static SmgpTagEnum getById(int id) {
+
+        SmgpTagEnum tagEnum = smgpTagMap.get(id);
+
+        if (tagEnum == null) {
+
+            synchronized (SmgpStatusEnum.class) {
+
+                tagEnum = smgpTagMap.get(id);
+
+                if (tagEnum == null) {
+                    SmgpTagEnum[] tagEnums = SmgpTagEnum.values();
+
+                    for (SmgpTagEnum tag : tagEnums) {
+
+                        if (tag.getVal() == id) {
+                            tagEnum = tag;
+                            break;
+                        }
+                    }
+
+                    smgpTagMap.put(id, tagEnum);
+                }
+
+            }
+        }
+
+        return tagEnum;
     }
 }

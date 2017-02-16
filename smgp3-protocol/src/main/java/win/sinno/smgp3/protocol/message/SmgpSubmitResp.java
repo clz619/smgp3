@@ -20,4 +20,8 @@ public class SmgpSubmitResp extends SmgpMessage<SmgpHeader, SmgpSubmitRespBody> 
         super(bytes, header, body);
     }
 
+    @Override
+    public String toString() {
+        return "SmgpSubmitResp{} " + super.toString();
+    }
 }

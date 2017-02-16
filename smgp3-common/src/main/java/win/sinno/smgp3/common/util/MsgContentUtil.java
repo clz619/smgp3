@@ -29,7 +29,7 @@ public class MsgContentUtil {
         try {
 
             if (msgFormat == 15) {
-                return msgContent.getBytes("gb2312");
+                return msgContent.getBytes("gb18030");
             } else if (msgFormat == 8) {
                 return msgContent.getBytes("iso-10646-ucs-2");
             }

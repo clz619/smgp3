@@ -11,6 +11,8 @@ public class ByteUtil {
 
     private static final String[] HEX_CODE = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
 
+    private static final String HEX_STR = "0123456789abcdef";
+
     private ByteUtil() {
     }
 
@@ -64,6 +66,10 @@ public class ByteUtil {
                         | (bytes[offset + 1] & 0xff)
                 )
                 ;
+    }
+
+    public static int byte2int(byte b) {
+        return b & 0xff;
     }
 
     public static int byte2int(byte[] bytes) {
@@ -134,6 +140,11 @@ public class ByteUtil {
     }
 
     //////////other 2 byte///////
+
+    public static byte char2Byte(char c) {
+        byte b = (byte) HEX_STR.indexOf(c);
+        return b;
+    }
 
     public static byte[] short2byte(short s) {
 

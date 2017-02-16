@@ -13,7 +13,46 @@ public class ByteUtilTest {
 
     @Test
     public void test() {
+
+        byte bb = -74;
+        int i = bb;
+        System.out.println(i);
+
+        int i2 = 140;
+        byte b2 = (byte) i2;
+        System.out.println(b2);
+        byte[] b2b = new byte[4];
+        b2b[3] = b2;
+        System.out.println(ByteUtil.byte2int(b2b));
+
+        System.out.println((b2 & 0xff));
+
+        System.out.println(ByteUtil.byte2int(b2));
+
         System.out.println(0xff);
+
+        byte[] b = new byte[4];
+        b[3] = -74;
+        System.out.println(ByteUtil.byte2int(b));
+
+        String s = "0, 0, 0, -74, 0, 0, 0, 2, 0, 0, 0, 2,6,1," +
+                "3," +
+                "100, 100, 121, 0, 0, 0, 0, 0, 0, 0," +
+                "48, 48," +
+                "48, 0, 0, 0, 0, 0," +
+                "48, 0, 0, 0, 0, 0," +
+                "15," +
+                "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0," +
+                "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0," +
+                "49, 49, 56, 55, 48, 48, 57, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0," +
+                "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0," +
+                "1," +
+                "49, 56, 57, 54, 56, 49, 57, 50, 57, 54, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0," +
+                "-95, -66, -74, -93, -33, -53, -44, -58, -95, -65, -48, -62, -76, -70, -69, -40, 46, -64, -95, -48, -62, -64, -49, -71, -53, -65, -51, 46, -51, -53, -74, -87, -69, -40, 84, 0," +
+                "0, 0, 0, 0, 0, 0, 0, 0";
+
+        String[] arr = s.split(",");
+        System.out.println(arr.length);
     }
 
     @Test
@@ -163,6 +202,18 @@ public class ByteUtilTest {
         System.out.println(t);
 
         System.out.println(Integer.toHexString(1212000000));
+
+    }
+
+    public void testMsgId() {
+        String msgId = "02037102141557415879";
+
+        //
+        byte[] deliverMsgIdBytes = {2, 3, 113, 2, 20, 21, 87, 65, 88, 121};
+
+        byte[] seqBytes={65,88,121};
+
+
 
     }
 }

@@ -1,9 +1,6 @@
 package win.sinno.smgp3.communication;
 
-import win.sinno.smgp3.protocol.message.SmgpActiveTest;
-import win.sinno.smgp3.protocol.message.SmgpActiveTestResp;
-import win.sinno.smgp3.protocol.message.SmgpLogin;
-import win.sinno.smgp3.protocol.message.SmgpLoginResp;
+import win.sinno.smgp3.protocol.message.*;
 
 /**
  * smgp processer，获取消息，写消息
@@ -60,6 +57,20 @@ public interface ISmgpCommunication {
      */
     void sendActiveTestResp(SmgpActiveTestResp smgpActiveTestResp);
 
+    /**
+     * send smgp Submit message
+     *
+     * @param smgpSubmit
+     */
+    void sendSubmit(SmgpSubmit smgpSubmit);
+
+    /**
+     * send smgp DeliverResp message
+     *
+     * @param smgpDeliverResp
+     */
+    void sendDeliverResp(SmgpDeliverResp smgpDeliverResp);
+
     ///////TODO other send
 
     ///////hander msg
@@ -92,6 +103,19 @@ public interface ISmgpCommunication {
      */
     void handlerActiveTestResp(SmgpActiveTestResp smgpActiveTestResp);
 
+    /**
+     * handler smgp SubmitResp message
+     *
+     * @param smgpSubmitResp
+     */
+    void handlerSubmitResp(SmgpSubmitResp smgpSubmitResp);
+
+    /**
+     * handler smgp Deliver message
+     *
+     * @param smgpDeliver
+     */
+    void handlerDeliver(SmgpDeliver smgpDeliver);
 
     /////TODO  other message handler
 

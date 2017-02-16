@@ -6,7 +6,7 @@ import win.sinno.smgp3.protocol.header.SmgpHeader;
 import win.sinno.smgp3.protocol.message.SmgpLoginResp;
 
 /**
- * smgp login resp message decoder
+ * smgp login resp message decode
  *
  * @author : admin@chenlizhong.cn
  * @version : 1.0
@@ -30,10 +30,10 @@ public class SmgpLoginRespDecoder implements ISmgpMessageDecoder<SmgpLoginResp> 
      * @return
      */
     @Override
-    public SmgpLoginResp decoder(byte[] bytes) {
+    public SmgpLoginResp decode(byte[] bytes) {
         SmgpLoginResp resp = new SmgpLoginResp(bytes);
 
-        SmgpHeader header = SmgpHeaderDecoder.decoder(bytes);
+        SmgpHeader header = SmgpHeaderDecoder.decode(bytes);
 
         SmgpLoginRespBody body = new SmgpLoginRespBody();
 
@@ -47,7 +47,7 @@ public class SmgpLoginRespDecoder implements ISmgpMessageDecoder<SmgpLoginResp> 
         offset += 16;
 
         //serverVersion
-        int serverVersion = bytes[offset];
+        int serverVersion = ByteUtil.byte2int(bytes[offset]);
 
         body.setStatus(status);
         body.setServerVersion(serverVersion);

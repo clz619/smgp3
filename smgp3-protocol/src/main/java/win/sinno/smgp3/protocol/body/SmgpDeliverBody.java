@@ -1,6 +1,6 @@
 package win.sinno.smgp3.protocol.body;
 
-import win.sinno.smgp3.protocol.constant.Tlv;
+import win.sinno.smgp3.protocol.constant.Tlv1;
 
 /**
  * smgp deliver message body
@@ -120,37 +120,37 @@ public class SmgpDeliverBody implements ISmgpBody {
     /**
      * GSM协议类型
      */
-    private Tlv tpPid;
+    private Tlv1 tpPid;
 
     /**
      * GSM协议类型
      */
-    private Tlv tpUdhi;
+    private Tlv1 tpUdhi;
 
     /**
      * 交易标识
      */
-    private Tlv linkId;
+    private Tlv1 linkId;
 
     /**
      * 短消息发送方的号码类型
      */
-    private Tlv srcTermType;
+    private Tlv1 srcTermType;
 
     /**
      * 短消息发送方的伪码
      */
-    private Tlv srcTermPseudo;
+    private Tlv1 srcTermPseudo;
 
     /**
      * sp发送的短信类型
      */
-    private Tlv submitMsgType;
+    private Tlv1 submitMsgType;
 
     /**
      * sp对消息的处理结果
      */
-    private Tlv spDealResult;
+    private Tlv1 spDealResult;
 
     public String getMsgId() {
         return msgId;
@@ -224,59 +224,59 @@ public class SmgpDeliverBody implements ISmgpBody {
         this.reserve = reserve;
     }
 
-    public Tlv getTpPid() {
+    public Tlv1 getTpPid() {
         return tpPid;
     }
 
-    public void setTpPid(Tlv tpPid) {
+    public void setTpPid(Tlv1 tpPid) {
         this.tpPid = tpPid;
     }
 
-    public Tlv getTpUdhi() {
+    public Tlv1 getTpUdhi() {
         return tpUdhi;
     }
 
-    public void setTpUdhi(Tlv tpUdhi) {
+    public void setTpUdhi(Tlv1 tpUdhi) {
         this.tpUdhi = tpUdhi;
     }
 
-    public Tlv getLinkId() {
+    public Tlv1 getLinkId() {
         return linkId;
     }
 
-    public void setLinkId(Tlv linkId) {
+    public void setLinkId(Tlv1 linkId) {
         this.linkId = linkId;
     }
 
-    public Tlv getSrcTermType() {
+    public Tlv1 getSrcTermType() {
         return srcTermType;
     }
 
-    public void setSrcTermType(Tlv srcTermType) {
+    public void setSrcTermType(Tlv1 srcTermType) {
         this.srcTermType = srcTermType;
     }
 
-    public Tlv getSrcTermPseudo() {
+    public Tlv1 getSrcTermPseudo() {
         return srcTermPseudo;
     }
 
-    public void setSrcTermPseudo(Tlv srcTermPseudo) {
+    public void setSrcTermPseudo(Tlv1 srcTermPseudo) {
         this.srcTermPseudo = srcTermPseudo;
     }
 
-    public Tlv getSubmitMsgType() {
+    public Tlv1 getSubmitMsgType() {
         return submitMsgType;
     }
 
-    public void setSubmitMsgType(Tlv submitMsgType) {
+    public void setSubmitMsgType(Tlv1 submitMsgType) {
         this.submitMsgType = submitMsgType;
     }
 
-    public Tlv getSpDealResult() {
+    public Tlv1 getSpDealResult() {
         return spDealResult;
     }
 
-    public void setSpDealResult(Tlv spDealResult) {
+    public void setSpDealResult(Tlv1 spDealResult) {
         this.spDealResult = spDealResult;
     }
 

@@ -6,7 +6,7 @@ import win.sinno.smgp3.protocol.header.SmgpHeader;
 import win.sinno.smgp3.protocol.message.SmgpSubmitResp;
 
 /**
- * smgp submit resp decoder
+ * smgp submit resp decode
  *
  * @author : admin@chenlizhong.cn
  * @version : 1.0
@@ -30,8 +30,8 @@ public class SmgpSubmitRespDecoder implements ISmgpMessageDecoder<SmgpSubmitResp
      * @return
      */
     @Override
-    public SmgpSubmitResp decoder(byte[] bytes) {
-        SmgpHeader header = SmgpHeaderDecoder.decoder(bytes);
+    public SmgpSubmitResp decode(byte[] bytes) {
+        SmgpHeader header = SmgpHeaderDecoder.decode(bytes);
 
         SmgpSubmitRespBody body = new SmgpSubmitRespBody();
 

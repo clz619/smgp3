@@ -1,13 +1,12 @@
 package win.sinno.smgp3.communication.encoder;
 
-import win.sinno.smgp3.common.util.AuthenticatorUtil;
 import win.sinno.smgp3.common.util.ByteUtil;
 import win.sinno.smgp3.protocol.body.SmgpLoginBody;
 import win.sinno.smgp3.protocol.header.SmgpHeader;
 import win.sinno.smgp3.protocol.message.SmgpLogin;
 
 /**
- * smgp login message encoder
+ * smgp login message encode
  *
  * @author : admin@chenlizhong.cn
  * @version : 1.0
@@ -43,7 +42,7 @@ public class SmgpLoginEncoder implements ISmgpMessageEncoder<SmgpLogin> {
         SmgpLoginBody body = smgpLogin.getBody();
 
         //验证
-        byte[] authClientBytes = AuthenticatorUtil.generateAuthClient(body.getClientId()
+        byte[] authClientBytes = SmgpAuthenticatorEncoder.generateAuthClient(body.getClientId()
                 , spPwd, body.getTimeStampyyMMddmmss());
 
         byte[] bytes = new byte[header.getPacketLength()];
@@ -51,7 +50,7 @@ public class SmgpLoginEncoder implements ISmgpMessageEncoder<SmgpLogin> {
         int offset = 0;
 
         //set header
-        SmgpHeaderEncoder.encoder(header, bytes, offset);
+        SmgpHeaderEncoder.encode(header, bytes, offset);
         offset += 12;
 
         //clientId

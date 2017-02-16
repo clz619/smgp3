@@ -1,6 +1,7 @@
-package win.sinno.smgp3.common.util;
+package win.sinno.smgp3.communication.encoder;
 
 import win.sinno.smgp3.common.config.LoggerConfigs;
+import win.sinno.smgp3.common.util.MD5Util;
 
 /**
  * 验证工具
@@ -9,7 +10,7 @@ import win.sinno.smgp3.common.config.LoggerConfigs;
  * @version : 1.0
  * @since : 2017/2/10 下午5:47
  */
-public class AuthenticatorUtil {
+public class SmgpAuthenticatorEncoder {
 
     /**
      * 生成客户端认证码

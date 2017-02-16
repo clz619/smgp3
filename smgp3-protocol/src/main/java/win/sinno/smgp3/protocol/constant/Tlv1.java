@@ -10,8 +10,7 @@ package win.sinno.smgp3.protocol.constant;
  * @version : 1.0
  * @since : 2017/2/9 下午2:18
  */
-public class Tlv {
-
+public class Tlv1 {
 
     /**
      * 标签值

@@ -15,32 +15,43 @@ import org.slf4j.Logger;
 import win.sinno.smgp3.common.config.LoggerConfigs;
 import win.sinno.smgp3.common.util.SmgpHeaderUtil;
 import win.sinno.smgp3.communication.ISmgpCommunication;
+import win.sinno.smgp3.communication.decoder.SmgpDeliverDecoder;
 import win.sinno.smgp3.communication.decoder.SmgpHeaderDecoder;
 import win.sinno.smgp3.communication.decoder.SmgpLoginRespDecoder;
+import win.sinno.smgp3.communication.decoder.SmgpSubmitRespDecoder;
+import win.sinno.smgp3.communication.encoder.SmgpDeliverRespEncoder;
 import win.sinno.smgp3.communication.encoder.SmgpHeaderEncoder;
 import win.sinno.smgp3.communication.encoder.SmgpLoginEncoder;
+import win.sinno.smgp3.communication.encoder.SmgpSubmitEncoder;
 import win.sinno.smgp3.communication.factory.SmgpActiveTestFactory;
 import win.sinno.smgp3.communication.factory.SmgpActiveTestRespFactory;
+import win.sinno.smgp3.communication.factory.SmgpDeliverRespFactory;
 import win.sinno.smgp3.communication.factory.SmgpLoginFactory;
+import win.sinno.smgp3.protocol.body.SmgpDeliverBody;
 import win.sinno.smgp3.protocol.body.SmgpLoginRespBody;
 import win.sinno.smgp3.protocol.constant.SmgpRequestEnum;
 import win.sinno.smgp3.protocol.constant.SmgpStatusEnum;
 import win.sinno.smgp3.protocol.header.SmgpHeader;
-import win.sinno.smgp3.protocol.message.SmgpActiveTest;
-import win.sinno.smgp3.protocol.message.SmgpActiveTestResp;
-import win.sinno.smgp3.protocol.message.SmgpLogin;
-import win.sinno.smgp3.protocol.message.SmgpLoginResp;
+import win.sinno.smgp3.protocol.message.*;
+import win.sinno.smgp3.protocol.model.SmgpReplyMessage;
+import win.sinno.smgp3.protocol.model.SmgpReportMessage;
+import win.sinno.smgp3.sp.handler.ISmgpReplyHandler;
+import win.sinno.smgp3.sp.handler.ISmgpReportHandler;
+import win.sinno.smgp3.sp.handler.ISmgpSubmitRespHandler;
 import win.sinno.smgp3.sp.netty.SmgpByte2MessageDecoder;
 import win.sinno.smgp3.sp.netty.SmgpMessageHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * sp
+ * smgp sp client
  *
  * @author : admin@chenlizhong.cn
  * @version : 1.0
  * @since : 2017/2/13 上午11:15
  */
-public class SmgpSp implements ISmgpCommunication {
+public class SmgpSp implements ISmgpCommunication, Runnable {
 
     private static final Logger LOG = LoggerConfigs.SMGP3_LOG;
 
@@ -50,6 +61,7 @@ public class SmgpSp implements ISmgpCommunication {
     private int port;
     private String spId;
     private String spPwd;
+    private String spSrcTermId;
 
     private ChannelFuture channelFuture;
 
@@ -61,28 +73,72 @@ public class SmgpSp implements ISmgpCommunication {
 
     private long lastActiveTestTs;
 
+    //submit resp handler
+    private List<ISmgpSubmitRespHandler> submitRespHandlers = new ArrayList<ISmgpSubmitRespHandler>();
+
+    //report handler
+    private List<ISmgpReportHandler> reportHandlers = new ArrayList<ISmgpReportHandler>();
+
+    //reply handler
+    private List<ISmgpReplyHandler> replyHandlers = new ArrayList<ISmgpReplyHandler>();
+
+    //send try count
     public static final int SEND_TRY_COUNT = 3;
+
+    //--Login
 
     private static final SmgpLoginEncoder SMGP_LOGIN_ENCODER = SmgpLoginEncoder.getInstance();
 
     private static final SmgpLoginRespDecoder SMGP_LOGIN_RESP_DECODER = SmgpLoginRespDecoder.getInstance();
 
+    //--Submit
+
+    private static final SmgpSubmitEncoder SMGP_SUBMIT_ENCODER = SmgpSubmitEncoder.getInstance();
+
+    private static final SmgpSubmitRespDecoder SMGP_SUBMIT_RESP_DECODER = SmgpSubmitRespDecoder.getInstance();
+
+    //--Deliver
+
+    private static final SmgpDeliverDecoder SMGP_DELIVER_DECODER = SmgpDeliverDecoder.getInstance();
+
+    private static final SmgpDeliverRespEncoder SMGP_DELIVER_RESP_ENCODER = SmgpDeliverRespEncoder.getInstance();
 
     private static final long ACTIVE_TEST_TS = 30000l;
 
     private static final long ACTIVE_TEST_DEAD_TS = 180000;
 
+
     public SmgpSp() {
     }
 
-    public SmgpSp(String name, String host, int port, String spId, String spPwd) {
+    public SmgpSp(String name, String host, int port, String spId, String spPwd, String spSrcTermId) {
         this.name = name;
         this.host = host;
         this.port = port;
         this.spId = spId;
         this.spPwd = spPwd;
+        this.spSrcTermId = spSrcTermId;
     }
 
+    /**
+     * When an object implementing interface <code>Runnable</code> is used
+     * to create a thread, starting the thread causes the object's
+     * <code>run</code> method to be called in that separately executing
+     * thread.
+     * <p>
+     * The general contract of the method <code>run</code> is that it may
+     * take any action whatsoever.
+     *
+     * @see Thread#run()
+     */
+    @Override
+    public void run() {
+        try {
+            connect();
+        } catch (InterruptedException e) {
+            LOG.info(e.getMessage(), e);
+        }
+    }
 
     public synchronized void connect() throws InterruptedException {
 
@@ -121,8 +177,6 @@ public class SmgpSp implements ISmgpCommunication {
                         long now = System.currentTimeMillis();
                         long activeTsStep = now - lastActiveTestTs;
 
-                        LOG.info(" active ts step :{}", activeTsStep);
-
                         if (activeTsStep > ACTIVE_TEST_DEAD_TS
                                 && (now - lastConnTs) > ACTIVE_TEST_DEAD_TS) {
 
@@ -138,12 +192,14 @@ public class SmgpSp implements ISmgpCommunication {
                                 Thread.sleep(30000l);
                             } catch (InterruptedException e) {
                                 LOG.error(e.getMessage(), e);
+                                break;
                             }
                         } else {
                             try {
                                 Thread.sleep(2000l);
                             } catch (InterruptedException e) {
                                 LOG.error(e.getMessage(), e);
+                                break;
                             }
                         }
                     } else {
@@ -151,6 +207,7 @@ public class SmgpSp implements ISmgpCommunication {
                             Thread.sleep(5000l);
                         } catch (InterruptedException e) {
                             LOG.error(e.getMessage(), e);
+                            break;
                         }
                     }
                 }
@@ -198,7 +255,7 @@ public class SmgpSp implements ISmgpCommunication {
     public synchronized void reconnect() {
         try {
             if (!isConnect()) {
-                setConnectFlag(false);
+                this.connectFlag = false;
                 connect();
             }
         } catch (InterruptedException e) {
@@ -280,7 +337,7 @@ public class SmgpSp implements ISmgpCommunication {
      */
     @Override
     public void sendActiveTest(SmgpActiveTest smgpActiveTest) {
-        send(SmgpHeaderEncoder.encoder(smgpActiveTest.getHeader()));
+        send(SmgpHeaderEncoder.encode(smgpActiveTest.getHeader()));
     }
 
     /**
@@ -290,7 +347,27 @@ public class SmgpSp implements ISmgpCommunication {
      */
     @Override
     public void sendActiveTestResp(SmgpActiveTestResp smgpActiveTestResp) {
-        send(SmgpHeaderEncoder.encoder(smgpActiveTestResp.getHeader()));
+        send(SmgpHeaderEncoder.encode(smgpActiveTestResp.getHeader()));
+    }
+
+    /**
+     * send smgp Submit message
+     *
+     * @param smgpSubmit
+     */
+    @Override
+    public void sendSubmit(SmgpSubmit smgpSubmit) {
+        send(SMGP_SUBMIT_ENCODER.encode(smgpSubmit));
+    }
+
+    /**
+     * send smgp DeliverResp message
+     *
+     * @param smgpDeliverResp
+     */
+    @Override
+    public void sendDeliverResp(SmgpDeliverResp smgpDeliverResp) {
+        send(SMGP_DELIVER_RESP_ENCODER.encode(smgpDeliverResp));
     }
 
     /**
@@ -309,20 +386,31 @@ public class SmgpSp implements ISmgpCommunication {
 
             case LOGIN_RESP:
 
-                handlerLoginResp(SMGP_LOGIN_RESP_DECODER.decoder(bytes));
+                handlerLoginResp(SMGP_LOGIN_RESP_DECODER.decode(bytes));
                 break;
 
-            case ACTIVE_TEST:
-                handlerActiveTest(new SmgpActiveTest(SmgpHeaderDecoder.decoder(bytes)));
+            case SUBMIT_RESP:
+
+                handlerSubmitResp(SMGP_SUBMIT_RESP_DECODER.decode(bytes));
+                break;
+
+            case DELIVER:
+
+                handlerDeliver(SMGP_DELIVER_DECODER.decode(bytes));
                 break;
 
             case ACTIVE_TEST_RESP:
 
-                handlerActiveTestResp(new SmgpActiveTestResp(SmgpHeaderDecoder.decoder(bytes)));
+                handlerActiveTestResp(new SmgpActiveTestResp(SmgpHeaderDecoder.decode(bytes)));
+                break;
+
+            case ACTIVE_TEST:
+
+                handlerActiveTest(new SmgpActiveTest(SmgpHeaderDecoder.decode(bytes)));
                 break;
 
             default:
-                LOG.info("unkonw smgp message:{}", bytes);
+                LOG.error("unkonw can not handler. smgp message:{}", bytes);
         }
 
     }
@@ -338,11 +426,14 @@ public class SmgpSp implements ISmgpCommunication {
         int status = body.getStatus();
 
         SmgpStatusEnum smgpStatusEnum = SmgpStatusEnum.getById(status);
+
         switch (smgpStatusEnum) {
+
             case SUCCESS:
-                setConnectFlag(true);
+                connectFlag = true;
                 lastConnTs = System.currentTimeMillis();
                 LOG.info("login success");
+
                 break;
 
             default:
@@ -364,7 +455,7 @@ public class SmgpSp implements ISmgpCommunication {
         SmgpActiveTestResp activeTestResp = SmgpActiveTestRespFactory.builder()
                 .sequenceId(header.getSequenceId()).build();
 
-        send(SmgpHeaderEncoder.encoder(activeTestResp.getHeader()));
+        send(SmgpHeaderEncoder.encode(activeTestResp.getHeader()));
     }
 
     /**
@@ -377,6 +468,122 @@ public class SmgpSp implements ISmgpCommunication {
         lastActiveTestTs = System.currentTimeMillis();
     }
 
+    /**
+     * handler smgp SubmitResp message
+     *
+     * @param smgpSubmitResp
+     */
+    @Override
+    public void handlerSubmitResp(SmgpSubmitResp smgpSubmitResp) {
+        LOG.info("get submit resp :{}", smgpSubmitResp);
+        // add SmgpSubmitResp message handler
+
+        for (ISmgpSubmitRespHandler submitRespHandler : submitRespHandlers) {
+            submitRespHandler.handler(smgpSubmitResp);
+        }
+    }
+
+    /**
+     * handler smgp Deliver message
+     *
+     * @param smgpDeliver
+     */
+    @Override
+    public void handlerDeliver(SmgpDeliver smgpDeliver) {
+
+        LOG.info("get smgp deliver:{}", smgpDeliver);
+
+        // add SmgpDeliver message hanlder
+
+        if (1 == smgpDeliver.getBody().getIsReport()) {
+            handlerReport(smgpDeliver);
+        } else {
+            handlerReply(smgpDeliver);
+        }
+
+        //report，reply 消息确认
+        ackDeliverMsg(smgpDeliver);
+
+    }
+
+    /**
+     * @param smgpDeliver
+     */
+    private void handlerReport(SmgpDeliver smgpDeliver) {
+
+        SmgpReportMessage reportMessage = smgpDeliver.getSmgpReportMessage();
+
+        for (ISmgpReportHandler reportHandler : reportHandlers) {
+            reportHandler.handler(reportMessage);
+        }
+
+    }
+
+    private void handlerReply(SmgpDeliver smgpDeliver) {
+        SmgpDeliverBody body = smgpDeliver.getBody();
+
+        SmgpReplyMessage replyMessage = new SmgpReplyMessage(
+                body.getMsgId(),
+                body.getRecvTime(),
+                body.getSrcTermId(),
+                body.getDestTermId(),
+                body.getMsgContent()
+        );
+
+        for (ISmgpReplyHandler replyHandler : replyHandlers) {
+            replyHandler.handler(replyMessage);
+        }
+    }
+
+    /**
+     * ack deliver msg
+     *
+     * @param smgpDeliver
+     */
+    private void ackDeliverMsg(SmgpDeliver smgpDeliver) {
+        int sequenceId = smgpDeliver.getHeader().getSequenceId();
+        String msgId = smgpDeliver.getBody().getMsgId();
+
+        SmgpDeliverResp smgpDeliverResp = SmgpDeliverRespFactory.builder()
+                .sequenceId(sequenceId)
+                .msgId(msgId)
+                .status(SmgpStatusEnum.SUCCESS.getId())
+                .build();
+
+        sendDeliverResp(smgpDeliverResp);
+    }
+
+    /**
+     * add smgp submit resp handler
+     *
+     * @param smgpSubmitRespHandler
+     */
+    public SmgpSp addSmgpSubmitRespHandler(ISmgpSubmitRespHandler smgpSubmitRespHandler) {
+        submitRespHandlers.add(smgpSubmitRespHandler);
+        return this;
+    }
+
+    /**
+     * add smgp report handler
+     *
+     * @param smgpReportHandler
+     */
+    public SmgpSp addSmgpReportHandler(ISmgpReportHandler smgpReportHandler) {
+        reportHandlers.add(smgpReportHandler);
+        return this;
+    }
+
+    /**
+     * add smgp reply handler
+     *
+     * @param smgpReplyHandler
+     */
+    public SmgpSp addSmgpReplyHandler(ISmgpReplyHandler smgpReplyHandler) {
+        replyHandlers.add(smgpReplyHandler);
+        return this;
+    }
+
+
     private void close() {
         LOG.info("sp:{} close now ", name);
 
@@ -386,78 +593,30 @@ public class SmgpSp implements ISmgpCommunication {
             channelFuture.channel().close();
         }
 
-        setConnectFlag(false);
+        this.connectFlag = false;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getHost() {
         return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
     }
 
     public int getPort() {
         return port;
     }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
-
     public String getSpId() {
         return spId;
-    }
-
-    public void setSpId(String spId) {
-        this.spId = spId;
     }
 
     public String getSpPwd() {
         return spPwd;
     }
 
-    public void setSpPwd(String spPwd) {
-        this.spPwd = spPwd;
-    }
-
-    public boolean isConnectFlag() {
-        return connectFlag;
-    }
-
-    public void setConnectFlag(boolean connectFlag) {
-        this.connectFlag = connectFlag;
-    }
-
-    public long getLastConnTs() {
-        return lastConnTs;
-    }
-
-    public void setLastConnTs(long lastConnTs) {
-        this.lastConnTs = lastConnTs;
-    }
-
-    public long getLastRespTs() {
-        return lastRespTs;
-    }
-
-    public void setLastRespTs(long lastRespTs) {
-        this.lastRespTs = lastRespTs;
-    }
-
-    public long getLastActiveTestTs() {
-        return lastActiveTestTs;
-    }
-
-    public void setLastActiveTestTs(long lastActiveTestTs) {
-        this.lastActiveTestTs = lastActiveTestTs;
+    public String getSpSrcTermId() {
+        return spSrcTermId;
     }
 }
