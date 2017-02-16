@@ -33,7 +33,7 @@ public class SmgpLoginRespDecoder implements ISmgpMessageDecoder<SmgpLoginResp> 
     public SmgpLoginResp decode(byte[] bytes) {
         SmgpLoginResp resp = new SmgpLoginResp(bytes);
 
-        SmgpHeader header = SmgpHeaderDecoder.decode(bytes);
+        SmgpHeader header = SmgpHeaderDecoder.getInstance().decode(bytes);
 
         SmgpLoginRespBody body = new SmgpLoginRespBody();
 

@@ -1,4 +1,6 @@
-package win.sinno.smgp3.protocol.model;
+package win.sinno.smgp3.protocol.tlv;
+
+import win.sinno.smgp3.protocol.ISmgpProtocol;
 
 /**
  * TODO
@@ -7,7 +9,7 @@ package win.sinno.smgp3.protocol.model;
  * @version : 1.0
  * @since : 2017/2/15 下午4:55
  */
-public class TpUdhiMessage {
+public class TpUdhiMessage implements ISmgpProtocol {
 
     /**
      * 长短信参考号,一个字节 最大0xff

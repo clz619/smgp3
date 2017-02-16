@@ -1,5 +1,6 @@
 package win.sinno.smgp3.protocol.message;
 
+import win.sinno.smgp3.protocol.ISmgpProtocol;
 import win.sinno.smgp3.protocol.body.ISmgpBody;
 import win.sinno.smgp3.protocol.header.ISmgpHeader;
 
@@ -12,7 +13,7 @@ import java.util.Arrays;
  * @version : 1.0
  * @since : 2017/2/9 下午2:26
  */
-public class SmgpMessage<HEADER extends ISmgpHeader, BODY extends ISmgpBody> {
+public class SmgpMessage<HEADER extends ISmgpHeader, BODY extends ISmgpBody> implements ISmgpProtocol {
 
     public SmgpMessage() {
     }

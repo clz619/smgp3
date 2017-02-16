@@ -10,6 +10,7 @@ import win.sinno.smgp3.protocol.header.SmgpHeader;
 import java.util.List;
 
 /**
+ * byte 2 message 解码器，此处只是字节截断，返回ByteBuf
  * smgp 粘包 处理
  *
  * @author : admin@chenlizhong.cn

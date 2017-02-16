@@ -85,24 +85,6 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
     //send try count
     public static final int SEND_TRY_COUNT = 3;
 
-    //--Login
-
-    private static final SmgpLoginEncoder SMGP_LOGIN_ENCODER = SmgpLoginEncoder.getInstance();
-
-    private static final SmgpLoginRespDecoder SMGP_LOGIN_RESP_DECODER = SmgpLoginRespDecoder.getInstance();
-
-    //--Submit
-
-    private static final SmgpSubmitEncoder SMGP_SUBMIT_ENCODER = SmgpSubmitEncoder.getInstance();
-
-    private static final SmgpSubmitRespDecoder SMGP_SUBMIT_RESP_DECODER = SmgpSubmitRespDecoder.getInstance();
-
-    //--Deliver
-
-    private static final SmgpDeliverDecoder SMGP_DELIVER_DECODER = SmgpDeliverDecoder.getInstance();
-
-    private static final SmgpDeliverRespEncoder SMGP_DELIVER_RESP_ENCODER = SmgpDeliverRespEncoder.getInstance();
-
     private static final long ACTIVE_TEST_TS = 30000l;
 
     private static final long ACTIVE_TEST_DEAD_TS = 180000;
@@ -327,7 +309,7 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
      */
     @Override
     public void sendLogin(SmgpLogin smgpLogin) {
-        send(SMGP_LOGIN_ENCODER.encode(smgpLogin));
+        send(SmgpLoginEncoder.getInstance().encode(smgpLogin));
     }
 
     /**
@@ -337,7 +319,7 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
      */
     @Override
     public void sendActiveTest(SmgpActiveTest smgpActiveTest) {
-        send(SmgpHeaderEncoder.encode(smgpActiveTest.getHeader()));
+        send(SmgpHeaderEncoder.getInstance().encode(smgpActiveTest.getHeader()));
     }
 
     /**
@@ -347,7 +329,7 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
      */
     @Override
     public void sendActiveTestResp(SmgpActiveTestResp smgpActiveTestResp) {
-        send(SmgpHeaderEncoder.encode(smgpActiveTestResp.getHeader()));
+        send(SmgpHeaderEncoder.getInstance().encode(smgpActiveTestResp.getHeader()));
     }
 
     /**
@@ -357,7 +339,7 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
      */
     @Override
     public void sendSubmit(SmgpSubmit smgpSubmit) {
-        send(SMGP_SUBMIT_ENCODER.encode(smgpSubmit));
+        send(SmgpSubmitEncoder.getInstance().encode(smgpSubmit));
     }
 
     /**
@@ -367,7 +349,7 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
      */
     @Override
     public void sendDeliverResp(SmgpDeliverResp smgpDeliverResp) {
-        send(SMGP_DELIVER_RESP_ENCODER.encode(smgpDeliverResp));
+        send(SmgpDeliverRespEncoder.getInstance().encode(smgpDeliverResp));
     }
 
     /**
@@ -386,27 +368,27 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
 
             case LOGIN_RESP:
 
-                handlerLoginResp(SMGP_LOGIN_RESP_DECODER.decode(bytes));
+                handlerLoginResp(SmgpLoginRespDecoder.getInstance().decode(bytes));
                 break;
 
             case SUBMIT_RESP:
 
-                handlerSubmitResp(SMGP_SUBMIT_RESP_DECODER.decode(bytes));
+                handlerSubmitResp(SmgpSubmitRespDecoder.getInstance().decode(bytes));
                 break;
 
             case DELIVER:
 
-                handlerDeliver(SMGP_DELIVER_DECODER.decode(bytes));
+                handlerDeliver(SmgpDeliverDecoder.getInstance().decode(bytes));
                 break;
 
             case ACTIVE_TEST_RESP:
 
-                handlerActiveTestResp(new SmgpActiveTestResp(SmgpHeaderDecoder.decode(bytes)));
+                handlerActiveTestResp(new SmgpActiveTestResp(SmgpHeaderDecoder.getInstance().decode(bytes)));
                 break;
 
             case ACTIVE_TEST:
 
-                handlerActiveTest(new SmgpActiveTest(SmgpHeaderDecoder.decode(bytes)));
+                handlerActiveTest(new SmgpActiveTest(SmgpHeaderDecoder.getInstance().decode(bytes)));
                 break;
 
             default:
@@ -455,7 +437,7 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
         SmgpActiveTestResp activeTestResp = SmgpActiveTestRespFactory.builder()
                 .sequenceId(header.getSequenceId()).build();
 
-        send(SmgpHeaderEncoder.encode(activeTestResp.getHeader()));
+        send(SmgpHeaderEncoder.getInstance().encode(activeTestResp.getHeader()));
     }
 
     /**

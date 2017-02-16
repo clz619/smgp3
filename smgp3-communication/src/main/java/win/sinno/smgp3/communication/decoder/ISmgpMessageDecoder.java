@@ -1,6 +1,6 @@
 package win.sinno.smgp3.communication.decoder;
 
-import win.sinno.smgp3.protocol.message.SmgpMessage;
+import win.sinno.smgp3.protocol.ISmgpProtocol;
 
 /**
  * smgp message 解码器
@@ -9,7 +9,7 @@ import win.sinno.smgp3.protocol.message.SmgpMessage;
  * @version : 1.0
  * @since : 2017/2/9 下午4:18
  */
-public interface ISmgpMessageDecoder<MSG extends SmgpMessage> {
+public interface ISmgpMessageDecoder<MSG extends ISmgpProtocol> {
 
     /**
      * @param bytes

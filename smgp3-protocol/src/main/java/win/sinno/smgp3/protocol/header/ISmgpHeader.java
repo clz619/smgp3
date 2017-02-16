@@ -1,5 +1,6 @@
 package win.sinno.smgp3.protocol.header;
 
+import win.sinno.smgp3.protocol.ISmgpProtocol;
 import win.sinno.smgp3.protocol.constant.SmgpRequestEnum;
 
 /**
@@ -9,7 +10,7 @@ import win.sinno.smgp3.protocol.constant.SmgpRequestEnum;
  * @version : 1.0
  * @since : 2017/2/9 下午2:23
  */
-public interface ISmgpHeader {
+public interface ISmgpHeader extends ISmgpProtocol {
     /**
      * 数据包长度，指包头和包体的长度之和。单位是"字节"
      */

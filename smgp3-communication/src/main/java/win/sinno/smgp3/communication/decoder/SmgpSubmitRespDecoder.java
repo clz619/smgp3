@@ -31,7 +31,7 @@ public class SmgpSubmitRespDecoder implements ISmgpMessageDecoder<SmgpSubmitResp
      */
     @Override
     public SmgpSubmitResp decode(byte[] bytes) {
-        SmgpHeader header = SmgpHeaderDecoder.decode(bytes);
+        SmgpHeader header = SmgpHeaderDecoder.getInstance().decode(bytes);
 
         SmgpSubmitRespBody body = new SmgpSubmitRespBody();
 

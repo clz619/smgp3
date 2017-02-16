@@ -1,4 +1,6 @@
-package win.sinno.smgp3.protocol.model;
+package win.sinno.smgp3.protocol.tlv;
+
+import win.sinno.smgp3.protocol.ISmgpProtocol;
 
 /**
  * smgp tvl message
@@ -7,7 +9,7 @@ package win.sinno.smgp3.protocol.model;
  * @version : 1.0
  * @since : 2017/2/15 下午4:42
  */
-public class Tlv<V> {
+public class SmgpTlv<V> implements ISmgpProtocol {
 
     /**
      * 字段的标签，用于唯一标识可选参数

@@ -1,5 +1,7 @@
 package win.sinno.smgp3.protocol.model;
 
+import win.sinno.smgp3.protocol.ISmgpProtocol;
+
 /**
  * “状态报告格式”采用SMPP V3.4中的规定，即“id:IIIIIIIIII sub:SSS dlvrd:DDD Submit date:YYMMDDhhmm done date: YYMMDDhhmm stat:DDDDDDD err:E Text:……”
  *
@@ -7,7 +9,7 @@ package win.sinno.smgp3.protocol.model;
  * @version : 1.0
  * @since : 2017/2/10 上午11:51
  */
-public class SmgpReportMessage {
+public class SmgpReportMessage implements ISmgpProtocol {
 
     /**
      * 状态报告对应原短消息的MsgID

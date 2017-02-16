@@ -1,6 +1,8 @@
 package win.sinno.smgp3.protocol.body;
 
-import win.sinno.smgp3.protocol.model.TpUdhiMessage;
+import win.sinno.smgp3.protocol.tlv.SmgpTlv;
+import win.sinno.smgp3.protocol.tlv.SmgpTlvCollection;
+import win.sinno.smgp3.protocol.tlv.TpUdhiMessage;
 
 /**
  * submit message body
@@ -75,7 +77,6 @@ public class SmgpSubmitBody implements ISmgpBody {
     private String feeType = "00";
 
     /**
-     * FIXME
      * <p>
      * 资费代码
      * <p>
@@ -102,16 +103,15 @@ public class SmgpSubmitBody implements ISmgpBody {
      * <p>
      * 对于文字短消息，要求MsgFormat＝0、8、15。对于回执消息，要求MsgFormat＝0。
      */
-    private int msgFormat = 15;
+    private int msgFormat = 8;
 
     /**
-     * 短消息有效时间，格式遵循SMPP3.3以上版本协议。 FIXME
+     * 短消息有效时间，格式遵循SMPP3.3以上版本协议。
      * 短消息有效时间在转发过程中保持不变。
      */
     private String validTime = "";
 
     /**
-     * FIXME
      * 短消息定时发送时间，格式遵循SMPP3.3以上版本协议。
      * 短消息定时发送时间在转发过程中保持不变。
      */
@@ -186,12 +186,11 @@ public class SmgpSubmitBody implements ISmgpBody {
 
     //------------可选参数
 
+    private SmgpTlvCollection smgpTlvCollection;
+
     /**
      * 用户数据头标识
      */
-    private int tpudhi;
-
-
     private TpUdhiMessage tpUdhiMessage;
 
 
@@ -331,12 +330,8 @@ public class SmgpSubmitBody implements ISmgpBody {
         this.reserve = reserve;
     }
 
-    public int getTpudhi() {
-        return tpudhi;
-    }
-
-    public void setTpudhi(int tpudhi) {
-        this.tpudhi = tpudhi;
+    public SmgpTlvCollection getSmgpTlvCollection() {
+        return smgpTlvCollection;
     }
 
     public TpUdhiMessage getTpUdhiMessage() {
@@ -346,4 +341,25 @@ public class SmgpSubmitBody implements ISmgpBody {
     public void setTpUdhiMessage(TpUdhiMessage tpUdhiMessage) {
         this.tpUdhiMessage = tpUdhiMessage;
     }
+
+    /**
+     * add smgp tlv
+     *
+     * @param smgpTlv
+     */
+    public SmgpSubmitBody addSmgpTlv(SmgpTlv smgpTlv) {
+
+        if (smgpTlvCollection == null) {
+            synchronized (this) {
+                if (smgpTlvCollection == null) {
+                    smgpTlvCollection = new SmgpTlvCollection();
+                }
+            }
+        }
+
+        smgpTlvCollection.put(smgpTlv.getTag(), smgpTlv);
+
+        return this;
+    }
+
 }

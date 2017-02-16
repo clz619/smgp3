@@ -48,20 +48,20 @@ public enum SmgpTagEnum {
 
     MSERVICE_ID("mserviceId", 0x0012);
 
-    SmgpTagEnum(String name, int val) {
+    SmgpTagEnum(String name, Integer val) {
         this.name = name;
         this.val = val;
     }
 
     private String name;
 
-    private int val;
+    private Integer val;
 
     public String getName() {
         return name;
     }
 
-    public int getVal() {
+    public Integer getVal() {
         return val;
     }
 

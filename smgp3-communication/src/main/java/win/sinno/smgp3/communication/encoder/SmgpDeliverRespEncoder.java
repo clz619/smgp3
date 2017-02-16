@@ -40,7 +40,7 @@ public class SmgpDeliverRespEncoder implements ISmgpMessageEncoder<SmgpDeliverRe
 
         byte[] bytes = new byte[26];
 
-        byte[] headerBytes = SmgpHeaderEncoder.encode(header);
+        byte[] headerBytes = SmgpHeaderEncoder.getInstance().encode(header);
 
         System.arraycopy(headerBytes, 0, bytes, 0, 12);
 

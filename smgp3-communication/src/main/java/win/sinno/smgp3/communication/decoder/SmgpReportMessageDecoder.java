@@ -14,7 +14,18 @@ import win.sinno.smgp3.protocol.model.SmgpReportMessage;
  * @version : 1.0
  * @since : 2017/2/14 下午4:35
  */
-public class SmgpReportMessageDecoder {
+public class SmgpReportMessageDecoder implements ISmgpMessageDecoder<SmgpReportMessage> {
+
+    private SmgpReportMessageDecoder() {
+    }
+
+    private static class SmgpReportMessageDecoderHolder {
+        private static final SmgpReportMessageDecoder HOLDER = new SmgpReportMessageDecoder();
+    }
+
+    public static SmgpReportMessageDecoder getInstance() {
+        return SmgpReportMessageDecoderHolder.HOLDER;
+    }
 
     /**
      * //id
@@ -67,7 +78,7 @@ public class SmgpReportMessageDecoder {
      * @param bytes
      * @return
      */
-    public static SmgpReportMessage decode(byte[] bytes) {
+    public SmgpReportMessage decode(byte[] bytes) {
 
         SmgpReportMessage smgpReportMessage = new SmgpReportMessage();
 

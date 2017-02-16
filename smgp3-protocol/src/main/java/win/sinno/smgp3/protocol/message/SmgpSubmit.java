@@ -17,4 +17,9 @@ public class SmgpSubmit extends SmgpMessage<SmgpHeader, SmgpSubmitBody> {
     public SmgpSubmit(SmgpHeader header, SmgpSubmitBody body) {
         super(header, body);
     }
+
+    public boolean hasTlv() {
+        return getBody().getSmgpTlvCollection() != null && getBody().getSmgpTlvCollection().size() > 0;
+    }
+
 }

@@ -1,3 +1,5 @@
+package win.sinno.smgp3.sp;
+
 import org.junit.Test;
 import win.sinno.smgp3.common.util.ByteUtil;
 import win.sinno.smgp3.common.util.LongMsgContentSplitUtil;
@@ -8,8 +10,10 @@ import win.sinno.smgp3.protocol.message.SmgpSubmit;
 import win.sinno.smgp3.protocol.message.SmgpSubmitResp;
 import win.sinno.smgp3.protocol.model.SmgpReplyMessage;
 import win.sinno.smgp3.protocol.model.SmgpReportMessage;
-import win.sinno.smgp3.protocol.model.TpUdhiMessage;
-import win.sinno.smgp3.sp.SmgpSp;
+import win.sinno.smgp3.protocol.tlv.SmgpTlv4PkNumber;
+import win.sinno.smgp3.protocol.tlv.SmgpTlv4PkTotal;
+import win.sinno.smgp3.protocol.tlv.SmgpTlv4TpUdhi;
+import win.sinno.smgp3.protocol.tlv.TpUdhiMessage;
 import win.sinno.smgp3.sp.handler.ISmgpReplyHandler;
 import win.sinno.smgp3.sp.handler.ISmgpReportHandler;
 import win.sinno.smgp3.sp.handler.ISmgpSubmitRespHandler;
@@ -162,21 +166,22 @@ public class SmgpSpTest {
 
         System.out.println("........send submit...");
 
-
         List<String> msg = LongMsgContentSplitUtil.split(longMsg);
 
-
-        for (int i = 0; i < msg.size(); i++) {
+        for (int i = 1; i <= msg.size(); i++) {
             SmgpSubmit smgpSubmit = SmgpSubmitFactory.builder().spId(spId).srcTermId(spSrcTermId)
                     .mobile(mobile).msgContent(msg.get(i)).build();
-
-            smgpSubmit.getBody().setTpudhi(1);
 
             TpUdhiMessage tpUdhiMessage = new TpUdhiMessage();
             tpUdhiMessage.setSign(msg.hashCode());
             tpUdhiMessage.setTn(msg.size());
-            tpUdhiMessage.setIdx(i + 1);
+            tpUdhiMessage.setIdx(i);
             smgpSubmit.getBody().setTpUdhiMessage(tpUdhiMessage);
+
+            smgpSubmit.getBody().addSmgpTlv(new SmgpTlv4TpUdhi(1))
+                    .addSmgpTlv(new SmgpTlv4PkTotal(msg.size()))
+                    .addSmgpTlv(new SmgpTlv4PkNumber(i));
+
             smgpSp.sendSubmit(smgpSubmit);
         }
 

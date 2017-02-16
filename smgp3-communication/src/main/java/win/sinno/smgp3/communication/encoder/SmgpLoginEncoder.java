@@ -50,7 +50,8 @@ public class SmgpLoginEncoder implements ISmgpMessageEncoder<SmgpLogin> {
         int offset = 0;
 
         //set header
-        SmgpHeaderEncoder.encode(header, bytes, offset);
+        byte[] headerBytes = SmgpHeaderEncoder.getInstance().encode(header);
+        System.arraycopy(headerBytes, 0, bytes, offset, 12);
         offset += 12;
 
         //clientId

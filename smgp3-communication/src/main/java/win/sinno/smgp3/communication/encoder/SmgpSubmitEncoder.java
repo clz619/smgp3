@@ -3,9 +3,10 @@ package win.sinno.smgp3.communication.encoder;
 import win.sinno.smgp3.common.util.ByteUtil;
 import win.sinno.smgp3.common.util.MsgContentUtil;
 import win.sinno.smgp3.protocol.body.SmgpSubmitBody;
+import win.sinno.smgp3.protocol.constant.SmgpTagEnum;
 import win.sinno.smgp3.protocol.header.SmgpHeader;
 import win.sinno.smgp3.protocol.message.SmgpSubmit;
-import win.sinno.smgp3.protocol.model.TpUdhiMessage;
+import win.sinno.smgp3.protocol.tlv.SmgpTlvCollection;
 
 /**
  * smgp submit encode
@@ -36,19 +37,18 @@ public class SmgpSubmitEncoder implements ISmgpMessageEncoder<SmgpSubmit> {
     @Override
     public byte[] encode(SmgpSubmit smgpSubmit) {
 
-        if (1 == smgpSubmit.getBody().getTpudhi()) {
+        if (smgpSubmit.hasTlv() && smgpSubmit.getBody().getSmgpTlvCollection().isContains(SmgpTagEnum.TP_UDHI)) {
 
             return encodeLongMsg(smgpSubmit);
-
         } else {
 
             return encodeShortMsg(smgpSubmit);
-
         }
 
     }
 
     private byte[] encodeShortMsg(SmgpSubmit smgpSubmit) {
+
         SmgpHeader header = smgpSubmit.getHeader();
 
         SmgpSubmitBody body = smgpSubmit.getBody();
@@ -104,6 +104,14 @@ public class SmgpSubmitEncoder implements ISmgpMessageEncoder<SmgpSubmit> {
 
         len += 8;
 
+        SmgpTlvCollection smgpTlvCollection = body.getSmgpTlvCollection();
+
+        if (smgpTlvCollection != null) {
+
+            //tlv collection bytes
+            byte[] tlvCollectionBytes = SmgpTlvCollectionEncoder.getInstance().encode(smgpTlvCollection);
+        }
+
         byte[] bytes = new byte[len];
 
         int offset = 0;
@@ -164,6 +172,7 @@ public class SmgpSubmitEncoder implements ISmgpMessageEncoder<SmgpSubmit> {
         System.arraycopy(msgContentBytes, 0, bytes, offset, msgContentBytes.length);
         offset += msgLength;
 
+
         return bytes;
     }
 
@@ -172,7 +181,8 @@ public class SmgpSubmitEncoder implements ISmgpMessageEncoder<SmgpSubmit> {
 
         SmgpSubmitBody body = smgpSubmit.getBody();
 
-        TpUdhiMessage tpUdhiMessage = body.getTpUdhiMessage();
+        SmgpTlvCollection smgpTlvCollection = body.getSmgpTlvCollection();
+
 
         int len = SmgpHeader.HEADER_LENGTH;
 
@@ -216,20 +226,22 @@ public class SmgpSubmitEncoder implements ISmgpMessageEncoder<SmgpSubmit> {
         byte[] destTermIdBytes = body.getDestTermId().getBytes();
         len += 21;
 
-        int msgLength = body.getMsgContent().length() * 2;
+        byte[] msgContentBytes = MsgContentUtil.formatMsg(body.getMsgContent(), body.getMsgFormat());
+        int msgLength = msgContentBytes.length;
         len += 1;
 
-        byte[] msgContentBytes = MsgContentUtil.formatMsg(body.getMsgContent(), body.getMsgFormat());
-        len += msgLength + 6;
+        byte[] tpudhiBytes = SmgpTpUdhiMessageEncoder.getInstance()
+                .encode(body.getTpUdhiMessage());
+        len += tpudhiBytes.length;
+
+        //add tpudhi - length
+        len += msgLength;
 
         len += 8;
 
-        //tp udhi
-        len += 5;
-        //pktotal
-        len += 5;
-        //pknumber
-        len += 5;
+        //add tlv len
+        byte[] tlvCollectionBytes = SmgpTlvCollectionEncoder.getInstance().encode(smgpTlvCollection);
+        len += tlvCollectionBytes.length;
 
         byte[] bytes = new byte[len];
 
@@ -285,32 +297,13 @@ public class SmgpSubmitEncoder implements ISmgpMessageEncoder<SmgpSubmit> {
         System.arraycopy(destTermIdBytes, 0, bytes, offset, destTermIdBytes.length);
         offset += 21;
 
-        //加入6个字节 TP_UDHI头长度
-        byte msgLengthByte = (byte) (msgLength + 6);
+        //加入 TP_UDHI头长度
+        byte msgLengthByte = (byte) (tpudhiBytes.length + msgLength);
         bytes[offset] = msgLengthByte;
         offset++;
 
-        //tpudhi
-        bytes[offset] = 0x05;
-        offset++;
-
-        bytes[offset] = 0x00;
-        offset++;
-
-        bytes[offset] = 0x03;
-        offset++;
-
-        bytes[offset] = (byte) tpUdhiMessage.getSign();
-        offset++;
-
-        byte tnByte = (byte) tpUdhiMessage.getTn();
-        bytes[offset] = tnByte;
-        offset++;
-
-        byte idxByte = (byte) tpUdhiMessage.getIdx();
-        bytes[offset] = idxByte;
-        offset++;
-
+        System.arraycopy(tpudhiBytes, 0, bytes, offset, tpudhiBytes.length);
+        offset += tpudhiBytes.length;
 
         //content
         System.arraycopy(msgContentBytes, 0, bytes, offset, msgContentBytes.length);
@@ -318,39 +311,8 @@ public class SmgpSubmitEncoder implements ISmgpMessageEncoder<SmgpSubmit> {
 
         offset += 8;
 
-        //add tpudhi tag
-        bytes[offset] = 0x00;
-        offset++;
-        bytes[offset] = 0x02;
-        offset++;
-        bytes[offset] = 0x00;
-        offset++;
-        bytes[offset] = 0x01;
-        offset++;
-        bytes[offset] = 0x01;
-        offset++;
-        //add pk total
-        bytes[offset] = 0x00;
-        offset++;
-        bytes[offset] = 0x09;
-        offset++;
-        bytes[offset] = 0x00;
-        offset++;
-        bytes[offset] = 0x01;
-        offset++;
-        bytes[offset] = tnByte;
-        offset++;
-        //add pknumber
-        bytes[offset] = 0x00;
-        offset++;
-        bytes[offset] = 0x0a;
-        offset++;
-        bytes[offset] = 0x00;
-        offset++;
-        bytes[offset] = 0x01;
-        offset++;
-        bytes[offset] = idxByte;
-        offset++;
+        //add tlv
+        System.arraycopy(tlvCollectionBytes, 0, bytes, offset, tlvCollectionBytes.length);
 
         return bytes;
     }
