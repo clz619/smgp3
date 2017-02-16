@@ -50,4 +50,13 @@ public class SmgpTlv<V> implements ISmgpProtocol {
     public void setValue(V value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return "SmgpTlv{" +
+                "tag=" + tag +
+                ", length=" + length +
+                ", value=" + value +
+                '}';
+    }
 }

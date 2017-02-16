@@ -93,4 +93,11 @@ public class SmgpTlvCollection implements ISmgpProtocol {
     public Collection<SmgpTlv> getTlvs() {
         return tlvMap.values();
     }
+
+    @Override
+    public String toString() {
+        return "SmgpTlvCollection{" +
+                "tlvMap=" + tlvMap +
+                '}';
+    }
 }

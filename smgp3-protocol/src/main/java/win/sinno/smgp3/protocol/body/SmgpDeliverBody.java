@@ -2,6 +2,7 @@ package win.sinno.smgp3.protocol.body;
 
 import win.sinno.smgp3.protocol.model.SmgpReportMessage;
 import win.sinno.smgp3.protocol.tlv.SmgpTlvCollection;
+import win.sinno.smgp3.protocol.tlv.TpUdhiMessage;
 
 /**
  * smgp deliver message body
@@ -119,10 +120,14 @@ public class SmgpDeliverBody implements ISmgpBody {
      */
     private String reserve;
 
+    //------
+
     /**
      * smgp tlv collection
      */
     private SmgpTlvCollection smgpTlvCollection;
+
+    private TpUdhiMessage tpUdhiMessage;
 
     public String getMsgId() {
         return msgId;
@@ -202,5 +207,30 @@ public class SmgpDeliverBody implements ISmgpBody {
 
     public void setSmgpTlvCollection(SmgpTlvCollection smgpTlvCollection) {
         this.smgpTlvCollection = smgpTlvCollection;
+    }
+
+    public TpUdhiMessage getTpUdhiMessage() {
+        return tpUdhiMessage;
+    }
+
+    public void setTpUdhiMessage(TpUdhiMessage tpUdhiMessage) {
+        this.tpUdhiMessage = tpUdhiMessage;
+    }
+
+    @Override
+    public String toString() {
+        return "SmgpDeliverBody{" +
+                "msgId='" + msgId + '\'' +
+                ", isReport=" + isReport +
+                ", msgFormat=" + msgFormat +
+                ", recvTime='" + recvTime + '\'' +
+                ", srcTermId='" + srcTermId + '\'' +
+                ", destTermId='" + destTermId + '\'' +
+                ", msgLength=" + msgLength +
+                ", msgContent='" + msgContent + '\'' +
+                ", reserve='" + reserve + '\'' +
+                ", smgpTlvCollection=" + smgpTlvCollection +
+                ", tpUdhiMessage=" + tpUdhiMessage +
+                '}';
     }
 }

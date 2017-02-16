@@ -3,7 +3,10 @@ package win.sinno.smgp3.communication.decoder;
 import org.junit.Assert;
 import org.junit.Test;
 import win.sinno.smgp3.communication.encoder.SmgpTlvCollectionEncoder;
-import win.sinno.smgp3.protocol.tlv.*;
+import win.sinno.smgp3.protocol.tlv.SmgpTlv4PkNumber;
+import win.sinno.smgp3.protocol.tlv.SmgpTlv4PkTotal;
+import win.sinno.smgp3.protocol.tlv.SmgpTlv4TpUdhi;
+import win.sinno.smgp3.protocol.tlv.SmgpTlvCollection;
 
 /**
  * tlv collection encoder test
@@ -20,8 +23,7 @@ public class SmgpTlvCollectionEncoderTest {
         SmgpTlvCollection smgpTlvCollection = new SmgpTlvCollection();
 
         SmgpTlv4TpUdhi tlv4TpUdhi = new SmgpTlv4TpUdhi();
-        TpUdhiMessage tpUdhiMessage = new TpUdhiMessage();
-        tlv4TpUdhi.setValue(tpUdhiMessage);
+        tlv4TpUdhi.setValue(1);
 
         SmgpTlv4PkTotal tlv4PkTotal = new SmgpTlv4PkTotal();
         tlv4PkTotal.setValue(4);
