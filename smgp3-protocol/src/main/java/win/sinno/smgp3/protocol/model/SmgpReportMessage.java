@@ -68,6 +68,17 @@ public class SmgpReportMessage implements ISmgpProtocol {
      */
     private String text;
 
+    /**
+     * 源号码，回复的网关的号码
+     */
+    private String srcTermId;
+
+    /**
+     * 目标号码，网关。
+     * 例如：106906943197
+     */
+    private String descTermId;
+
     public String getId() {
         return id;
     }
@@ -132,6 +143,22 @@ public class SmgpReportMessage implements ISmgpProtocol {
         this.text = text;
     }
 
+    public String getSrcTermId() {
+        return srcTermId;
+    }
+
+    public void setSrcTermId(String srcTermId) {
+        this.srcTermId = srcTermId;
+    }
+
+    public String getDescTermId() {
+        return descTermId;
+    }
+
+    public void setDescTermId(String descTermId) {
+        this.descTermId = descTermId;
+    }
+
     @Override
     public String toString() {
         return "SmgpReportMessage{" +
@@ -143,6 +170,8 @@ public class SmgpReportMessage implements ISmgpProtocol {
                 ", stat='" + stat + '\'' +
                 ", err='" + err + '\'' +
                 ", text='" + text + '\'' +
+                ", srcTermId='" + srcTermId + '\'' +
+                ", descTermId='" + descTermId + '\'' +
                 '}';
     }
 }

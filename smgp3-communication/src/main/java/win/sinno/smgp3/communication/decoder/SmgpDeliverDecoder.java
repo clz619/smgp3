@@ -93,10 +93,13 @@ public class SmgpDeliverDecoder implements ISmgpMessageDecoder<SmgpDeliver> {
         if (body.getIsReport() == 1) {
 
             SmgpReportMessage smgpReportMessage = SmgpReportMessageDecoder.getInstance().decode(msgContentBytes);
+            smgpReportMessage.setSrcTermId(body.getSrcTermId());
+            smgpReportMessage.setDescTermId(body.getDestTermId());
             smgpDeliver.setSmgpReportMessage(smgpReportMessage);
-        } else {
-            //reply
 
+        } else {
+
+            //reply
             if (offset == bytes.length) {
                 LoggerConfigs.SMGP3_LOG.info("smgp deliver no tlv");
 

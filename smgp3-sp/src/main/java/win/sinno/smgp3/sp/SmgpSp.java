@@ -612,68 +612,6 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
         return connectFlag;
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-
-        private String name;
-
-        private String host;
-
-        private int port;
-
-        private String spId;
-
-        private String spPwd;
-
-        private String spSrcTermId;
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder host(String host) {
-            this.host = host;
-            return this;
-        }
-
-        public Builder port(int port) {
-            this.port = port;
-            return this;
-        }
-
-        public Builder spId(String spId) {
-            this.spId = spId;
-            return this;
-        }
-
-        public Builder spPwd(String spPwd) {
-            this.spPwd = spPwd;
-            return this;
-        }
-
-        public Builder spSrcTermId(String spSrcTermId) {
-            this.spSrcTermId = spSrcTermId;
-            return this;
-        }
-
-
-        public SmgpSp build() {
-
-            return new SmgpSp(
-                    name,
-                    host,
-                    port,
-                    spId,
-                    spPwd,
-                    spSrcTermId);
-
-        }
-
-    }
 
     @Override
     public String toString() {
