@@ -55,7 +55,6 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
 
     private static final Logger LOG = LoggerConfigs.SMGP3_LOG;
 
-
     private String name;
     private String host;
     private int port;
@@ -65,13 +64,15 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
 
     private ChannelFuture channelFuture;
 
-    private boolean connectFlag;
+    private volatile boolean connectFlag;
 
     private long lastConnTs;
 
     private long lastRespTs;
 
     private long lastActiveTestTs;
+
+    private volatile boolean isRun = true;
 
     //submit resp handler
     private List<ISmgpSubmitRespHandler> submitRespHandlers = new ArrayList<ISmgpSubmitRespHandler>();
@@ -153,7 +154,7 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
             @Override
             public void run() {
 
-                while (true) {
+                while (isRun) {
                     if (connectFlag) {
                         //心跳时间步骤
                         long now = System.currentTimeMillis();
@@ -566,7 +567,7 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
     }
 
 
-    private void close() {
+    public void close() {
         LOG.info("sp:{} close now ", name);
 
         if (channelFuture != null
@@ -576,6 +577,11 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
         }
 
         this.connectFlag = false;
+    }
+
+    public void stop() {
+        isRun = false;
+        close();
     }
 
     public String getName() {
@@ -600,5 +606,92 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
 
     public String getSpSrcTermId() {
         return spSrcTermId;
+    }
+
+    public boolean isConnectFlag() {
+        return connectFlag;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private String name;
+
+        private String host;
+
+        private int port;
+
+        private String spId;
+
+        private String spPwd;
+
+        private String spSrcTermId;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder host(String host) {
+            this.host = host;
+            return this;
+        }
+
+        public Builder port(int port) {
+            this.port = port;
+            return this;
+        }
+
+        public Builder spId(String spId) {
+            this.spId = spId;
+            return this;
+        }
+
+        public Builder spPwd(String spPwd) {
+            this.spPwd = spPwd;
+            return this;
+        }
+
+        public Builder spSrcTermId(String spSrcTermId) {
+            this.spSrcTermId = spSrcTermId;
+            return this;
+        }
+
+
+        public SmgpSp build() {
+
+            return new SmgpSp(
+                    name,
+                    host,
+                    port,
+                    spId,
+                    spPwd,
+                    spSrcTermId);
+
+        }
+
+    }
+
+    @Override
+    public String toString() {
+        return "SmgpSp{" +
+                "name='" + name + '\'' +
+                ", host='" + host + '\'' +
+                ", port=" + port +
+                ", spId='" + spId + '\'' +
+                ", spPwd='" + spPwd + '\'' +
+                ", spSrcTermId='" + spSrcTermId + '\'' +
+                ", channelFuture=" + channelFuture +
+                ", connectFlag=" + connectFlag +
+                ", lastConnTs=" + lastConnTs +
+                ", lastRespTs=" + lastRespTs +
+                ", lastActiveTestTs=" + lastActiveTestTs +
+                ", submitRespHandlers=" + submitRespHandlers +
+                ", reportHandlers=" + reportHandlers +
+                ", replyHandlers=" + replyHandlers +
+                '}';
     }
 }

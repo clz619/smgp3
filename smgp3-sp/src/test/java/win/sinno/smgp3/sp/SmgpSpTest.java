@@ -2,6 +2,7 @@ package win.sinno.smgp3.sp;
 
 import org.junit.Test;
 import win.sinno.smgp3.common.util.ByteUtil;
+import win.sinno.smgp3.common.util.LongMsgContentSplitUtil;
 import win.sinno.smgp3.communication.decoder.SmgpDeliverDecoder;
 import win.sinno.smgp3.communication.factory.SmgpSubmitFactory;
 import win.sinno.smgp3.protocol.message.SmgpDeliver;
@@ -9,9 +10,15 @@ import win.sinno.smgp3.protocol.message.SmgpSubmit;
 import win.sinno.smgp3.protocol.message.SmgpSubmitResp;
 import win.sinno.smgp3.protocol.model.SmgpReplyMessage;
 import win.sinno.smgp3.protocol.model.SmgpReportMessage;
+import win.sinno.smgp3.protocol.tlv.SmgpTlv4PkNumber;
+import win.sinno.smgp3.protocol.tlv.SmgpTlv4PkTotal;
+import win.sinno.smgp3.protocol.tlv.SmgpTlv4TpUdhi;
+import win.sinno.smgp3.protocol.tlv.TpUdhiMessage;
 import win.sinno.smgp3.sp.handler.ISmgpReplyHandler;
 import win.sinno.smgp3.sp.handler.ISmgpReportHandler;
 import win.sinno.smgp3.sp.handler.ISmgpSubmitRespHandler;
+
+import java.util.List;
 
 /**
  * @author : admin@chenlizhong.cn
@@ -159,24 +166,24 @@ public class SmgpSpTest {
 
         System.out.println("........send submit...");
 
-//        List<String> msg = LongMsgContentSplitUtil.split(longMsg);
-//
-//        for (int i = 1; i <= msg.size(); i++) {
-//            SmgpSubmit smgpSubmit = SmgpSubmitFactory.builder().spId(spId).srcTermId(spSrcTermId)
-//                    .mobile(mobile).msgContent(msg.get(i - 1)).build();
-//
-//            TpUdhiMessage tpUdhiMessage = new TpUdhiMessage();
-//            tpUdhiMessage.setSign(msg.hashCode());
-//            tpUdhiMessage.setTn(msg.size());
-//            tpUdhiMessage.setIdx(i);
-//            smgpSubmit.getBody().setTpUdhiMessage(tpUdhiMessage);
-//
-//            smgpSubmit.getBody().addSmgpTlv(new SmgpTlv4TpUdhi(1))
-//                    .addSmgpTlv(new SmgpTlv4PkTotal(msg.size()))
-//                    .addSmgpTlv(new SmgpTlv4PkNumber(i));
-//
-//            smgpSp.sendSubmit(smgpSubmit);
-//        }
+        List<String> msg = LongMsgContentSplitUtil.split(longMsg);
+
+        for (int i = 1; i <= msg.size(); i++) {
+            SmgpSubmit smgpSubmit = SmgpSubmitFactory.builder().spId(spId).srcTermId(spSrcTermId)
+                    .mobile(mobile).msgContent(msg.get(i - 1)).build();
+
+            TpUdhiMessage tpUdhiMessage = new TpUdhiMessage();
+            tpUdhiMessage.setSign(msg.hashCode());
+            tpUdhiMessage.setTn(msg.size());
+            tpUdhiMessage.setIdx(i);
+            smgpSubmit.getBody().setTpUdhiMessage(tpUdhiMessage);
+
+            smgpSubmit.getBody().addSmgpTlv(new SmgpTlv4TpUdhi(1))
+                    .addSmgpTlv(new SmgpTlv4PkTotal(msg.size()))
+                    .addSmgpTlv(new SmgpTlv4PkNumber(i));
+
+            smgpSp.sendSubmit(smgpSubmit);
+        }
 
         try {
             Thread.sleep(20000000l);

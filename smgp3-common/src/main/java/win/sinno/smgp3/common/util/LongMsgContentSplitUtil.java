@@ -17,6 +17,10 @@ public class LongMsgContentSplitUtil {
 
     public static final int SPLIT_LEN = 67;
 
+    public static boolean isLongMsg(String msg) {
+        return msg.length() > SINGLE_MAX_LEN;
+    }
+
     public static List<String> split(String msg) {
         if (msg == null) {
             return null;
