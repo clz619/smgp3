@@ -1,6 +1,5 @@
 package win.sinno.smgp3.communication.factory;
 
-import win.sinno.smgp3.common.util.SequenceIdGenerator;
 import win.sinno.smgp3.protocol.constant.SmgpRequestEnum;
 import win.sinno.smgp3.protocol.header.SmgpHeader;
 import win.sinno.smgp3.protocol.message.SmgpActiveTest;
@@ -14,30 +13,21 @@ import win.sinno.smgp3.protocol.message.SmgpActiveTest;
  */
 public class SmgpActiveTestFactory {
 
-    public static Builder builder() {
-        return Builder.INSTANCE;
+    public static Builder builder(Integer sequenceId) {
+        return new Builder(sequenceId);
     }
 
     public static class Builder {
-        static final Builder INSTANCE = new Builder();
 
-        private int sequenceId;
+        private Integer sequenceId;
 
-        private Builder() {
-        }
-
-        private void sequenceId(int sequenceId) {
+        private Builder(Integer sequenceId) {
             this.sequenceId = sequenceId;
         }
 
         public SmgpActiveTest build() {
             SmgpHeader smgpHeader = new SmgpHeader();
             smgpHeader.setRequestId(SmgpRequestEnum.ACTIVE_TEST.getId());
-
-            if (sequenceId <= 0) {
-                sequenceId = SequenceIdGenerator.nextSeqId();
-            }
-
             smgpHeader.setSequenceId(sequenceId);
 
             SmgpActiveTest smgpActiveTest = new SmgpActiveTest(smgpHeader);

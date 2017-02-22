@@ -13,8 +13,10 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import org.slf4j.Logger;
 import win.sinno.smgp3.common.config.LoggerConfigs;
+import win.sinno.smgp3.common.util.SequenceIdGenerator;
 import win.sinno.smgp3.common.util.SmgpHeaderUtil;
 import win.sinno.smgp3.communication.ISmgpCommunication;
+import win.sinno.smgp3.communication.ISmgpSequence;
 import win.sinno.smgp3.communication.decoder.SmgpDeliverDecoder;
 import win.sinno.smgp3.communication.decoder.SmgpHeaderDecoder;
 import win.sinno.smgp3.communication.decoder.SmgpLoginRespDecoder;
@@ -51,7 +53,7 @@ import java.util.List;
  * @version : 1.0
  * @since : 2017/2/13 上午11:15
  */
-public class SmgpSp implements ISmgpCommunication, Runnable {
+public class SmgpSp implements ISmgpCommunication, ISmgpSequence, Runnable {
 
     private static final Logger LOG = LoggerConfigs.SMGP3_LOG;
 
@@ -90,9 +92,8 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
 
     private static final long ACTIVE_TEST_DEAD_TS = 180000;
 
+    private SequenceIdGenerator sequenceIdGenerator;
 
-    public SmgpSp() {
-    }
 
     public SmgpSp(String name, String host, int port, String spId, String spPwd, String spSrcTermId) {
         this.name = name;
@@ -101,6 +102,8 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
         this.spId = spId;
         this.spPwd = spPwd;
         this.spSrcTermId = spSrcTermId;
+
+        this.sequenceIdGenerator = SequenceIdGenerator.getInstance(name);
     }
 
     /**
@@ -169,7 +172,7 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
                         } else if (activeTsStep > ACTIVE_TEST_TS) {
 
 
-                            sendActiveTest(SmgpActiveTestFactory.builder().build());
+                            sendActiveTest(SmgpActiveTestFactory.builder(nextSeqId()).build());
 
                             try {
                                 Thread.sleep(30000l);
@@ -227,7 +230,7 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
     }
 
     private synchronized void sendConnectReq() {
-        SmgpLogin smgpLogin = SmgpLoginFactory.builder()
+        SmgpLogin smgpLogin = SmgpLoginFactory.builder(nextSeqId())
                 .spId(spId)
                 .spPwd(spPwd)
                 .build();
@@ -343,6 +346,14 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
         send(SmgpSubmitEncoder.getInstance().encode(smgpSubmit));
     }
 
+    public void sendSubmit(Integer sign, List<SmgpSubmit> smgpSubmits) {
+        synchronized (sign) {
+            for (SmgpSubmit smgpSubmit : smgpSubmits) {
+                sendSubmit(smgpSubmit);
+            }
+        }
+    }
+
     /**
      * send smgp DeliverResp message
      *
@@ -435,8 +446,8 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
     public void handlerActiveTest(SmgpActiveTest smgpActiveTest) {
         SmgpHeader header = smgpActiveTest.getHeader();
 
-        SmgpActiveTestResp activeTestResp = SmgpActiveTestRespFactory.builder()
-                .sequenceId(header.getSequenceId()).build();
+        SmgpActiveTestResp activeTestResp = SmgpActiveTestRespFactory.builder(nextSeqId())
+                .build();
 
         send(SmgpHeaderEncoder.getInstance().encode(activeTestResp.getHeader()));
     }
@@ -527,8 +538,7 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
         int sequenceId = smgpDeliver.getHeader().getSequenceId();
         String msgId = smgpDeliver.getBody().getMsgId();
 
-        SmgpDeliverResp smgpDeliverResp = SmgpDeliverRespFactory.builder()
-                .sequenceId(sequenceId)
+        SmgpDeliverResp smgpDeliverResp = SmgpDeliverRespFactory.builder(sequenceId)
                 .msgId(msgId)
                 .status(SmgpStatusEnum.SUCCESS.getId())
                 .build();
@@ -631,5 +641,10 @@ public class SmgpSp implements ISmgpCommunication, Runnable {
                 ", reportHandlers=" + reportHandlers +
                 ", replyHandlers=" + replyHandlers +
                 '}';
+    }
+
+    @Override
+    public Integer nextSeqId() {
+        return sequenceIdGenerator.nextSeqId();
     }
 }

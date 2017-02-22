@@ -1,6 +1,5 @@
 package win.sinno.smgp3.communication.factory;
 
-import win.sinno.smgp3.common.util.SequenceIdGenerator;
 import win.sinno.smgp3.protocol.body.SmgpSubmitBody;
 import win.sinno.smgp3.protocol.constant.SmgpRequestEnum;
 import win.sinno.smgp3.protocol.header.SmgpHeader;
@@ -15,12 +14,14 @@ import win.sinno.smgp3.protocol.message.SmgpSubmit;
  */
 public class SmgpSubmitFactory {
 
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(Integer sequenceId) {
+        return new Builder(sequenceId);
     }
 
 
     public static class Builder {
+
+        private Integer sequenceId;
 
         private String spId;
 
@@ -38,43 +39,13 @@ public class SmgpSubmitFactory {
 
         private String chargeTermId = "";
 
-
-        private Builder() {
+        private Builder(Integer sequenceId) {
+            this.sequenceId = sequenceId;
         }
 
-
-        public SmgpSubmit build() {
-
-            SmgpHeader header = new SmgpHeader();
-            header.setRequestId(SmgpRequestEnum.SUBMIT.getId());
-            header.setSequenceId(SequenceIdGenerator.nextSeqId());
-
-            SmgpSubmitBody body = new SmgpSubmitBody();
-            body.setDestTermId(mobile);
-            body.setMsgContent(msgContent);
-            if (serviceId != null) {
-                body.setServiceId(serviceId);
-            }
-            if (validTime != null) {
-                body.setValidTime(validTime);
-            }
-
-            if (atTime != null) {
-                body.setAtTime(atTime);
-            }
-
-            if (srcTermId != null) {
-                body.setSrcTermId(srcTermId);
-            }
-            if (chargeTermId != null) {
-                body.setChargeTermId(chargeTermId);
-            }
-            //提交
-            SmgpSubmit smgpSubmit = new SmgpSubmit();
-            smgpSubmit.setHeader(header);
-            smgpSubmit.setBody(body);
-
-            return smgpSubmit;
+        public Builder spId(Integer sequenceId) {
+            this.sequenceId = sequenceId;
+            return this;
         }
 
         public Builder spId(String spId) {
@@ -117,6 +88,39 @@ public class SmgpSubmitFactory {
             return this;
         }
 
+        public SmgpSubmit build() {
+
+            SmgpHeader header = new SmgpHeader();
+            header.setRequestId(SmgpRequestEnum.SUBMIT.getId());
+            header.setSequenceId(sequenceId);
+
+            SmgpSubmitBody body = new SmgpSubmitBody();
+            body.setDestTermId(mobile);
+            body.setMsgContent(msgContent);
+            if (serviceId != null) {
+                body.setServiceId(serviceId);
+            }
+            if (validTime != null) {
+                body.setValidTime(validTime);
+            }
+
+            if (atTime != null) {
+                body.setAtTime(atTime);
+            }
+
+            if (srcTermId != null) {
+                body.setSrcTermId(srcTermId);
+            }
+            if (chargeTermId != null) {
+                body.setChargeTermId(chargeTermId);
+            }
+            //提交
+            SmgpSubmit smgpSubmit = new SmgpSubmit();
+            smgpSubmit.setHeader(header);
+            smgpSubmit.setBody(body);
+
+            return smgpSubmit;
+        }
 
     }
 }

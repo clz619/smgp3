@@ -62,7 +62,6 @@ public class SmgpSpManager {
                 LOG.warn("sp:{} is connected.do not 2 start!", name);
                 return;
             } else {
-
                 //rm old sp
                 rmSp(name);
             }
@@ -161,10 +160,12 @@ public class SmgpSpManager {
                 //long msg
                 List<String> msg = LongMsgContentSplitUtil.split(content);
 
+                List<SmgpSubmit> smgpSubmits = new ArrayList<SmgpSubmit>();
+
                 List<Integer> seqIds = new ArrayList<>();
 
                 for (int i = 1; i <= msg.size(); i++) {
-                    SmgpSubmit smgpSubmit = SmgpSubmitFactory.builder().spId(sp.getSpId()).srcTermId(sp.getSpSrcTermId())
+                    SmgpSubmit smgpSubmit = SmgpSubmitFactory.builder(sp.nextSeqId()).spId(sp.getSpId()).srcTermId(sp.getSpSrcTermId())
                             .mobile(mobile).msgContent(msg.get(i - 1)).build();
 
                     TpUdhiMessage tpUdhiMessage = new TpUdhiMessage();
@@ -177,15 +178,18 @@ public class SmgpSpManager {
                             .addSmgpTlv(new SmgpTlv4PkTotal(msg.size()))
                             .addSmgpTlv(new SmgpTlv4PkNumber(i));
 
-                    sp.sendSubmit(smgpSubmit);
+                    smgpSubmits.add(smgpSubmit);
+
                     seqIds.add(smgpSubmit.getHeader().getSequenceId());
                 }
+
+                sp.sendSubmit((mobile.hashCode() + content.hashCode()) & 0xff, smgpSubmits);
 
                 seqId = seqIds.get(0);
             } else {
                 //single msg
 
-                SmgpSubmit smgpSubmit = SmgpSubmitFactory.builder().spId(sp.getSpId()).srcTermId(sp.getSpSrcTermId())
+                SmgpSubmit smgpSubmit = SmgpSubmitFactory.builder(sp.nextSeqId()).spId(sp.getSpId()).srcTermId(sp.getSpSrcTermId())
                         .mobile(mobile).msgContent(content).build();
                 sp.sendSubmit(smgpSubmit);
 

@@ -1,7 +1,6 @@
 package win.sinno.smgp3.communication.factory;
 
 import win.sinno.common.util.DateUtil;
-import win.sinno.smgp3.common.util.SequenceIdGenerator;
 import win.sinno.smgp3.protocol.body.SmgpLoginBody;
 import win.sinno.smgp3.protocol.constant.SmgpConfigs;
 import win.sinno.smgp3.protocol.constant.SmgpLoginModeEnum;
@@ -23,8 +22,8 @@ public class SmgpLoginFactory {
     //固定长度为42
     private static final int PACKAGE_LEN = 42;
 
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(Integer sequenceId) {
+        return new Builder(sequenceId);
     }
 
     public static class Builder {
@@ -44,34 +43,15 @@ public class SmgpLoginFactory {
 
         private int timestamp;
 
-        private Builder() {
+        private Integer sequenceId;
+
+        private Builder(Integer sequenceId) {
             nowTimestamp = System.currentTimeMillis();
             timestampStr = DateUtil.format(nowTimestamp, TIMESTAMP_FORMAT);
             timestamp = Integer.valueOf(timestampStr);
+            this.sequenceId = sequenceId;
         }
 
-        public SmgpLogin build() {
-
-            SmgpHeader header = new SmgpHeader();
-            header.setPacketLength(PACKAGE_LEN);
-            header.setRequestId(SmgpRequestEnum.LOGIN.getId());
-            header.setSequenceId(SequenceIdGenerator.nextSeqId());
-
-            SmgpLoginBody body = new SmgpLoginBody();
-            body.setClientId(spId);
-            body.setLoginMode(loginMode);
-            body.setTimeStamp(timestamp);
-            body.setTimeStampyyMMddmmss(timestampStr);
-            body.setClientVersion(clientVersion);
-
-            SmgpLogin login = new SmgpLogin();
-
-            login.setSpPwd(spPwd);
-            login.setHeader(header);
-            login.setBody(body);
-
-            return login;
-        }
 
         public Builder spId(String spId) {
             this.spId = spId;
@@ -91,6 +71,29 @@ public class SmgpLoginFactory {
         public Builder clientVersion(int clientVersion) {
             this.clientVersion = clientVersion;
             return this;
+        }
+
+        public SmgpLogin build() {
+
+            SmgpHeader header = new SmgpHeader();
+            header.setPacketLength(PACKAGE_LEN);
+            header.setRequestId(SmgpRequestEnum.LOGIN.getId());
+            header.setSequenceId(sequenceId);
+
+            SmgpLoginBody body = new SmgpLoginBody();
+            body.setClientId(spId);
+            body.setLoginMode(loginMode);
+            body.setTimeStamp(timestamp);
+            body.setTimeStampyyMMddmmss(timestampStr);
+            body.setClientVersion(clientVersion);
+
+            SmgpLogin login = new SmgpLogin();
+
+            login.setSpPwd(spPwd);
+            login.setHeader(header);
+            login.setBody(body);
+
+            return login;
         }
     }
 }

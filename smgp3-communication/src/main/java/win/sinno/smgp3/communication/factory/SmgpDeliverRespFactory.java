@@ -16,17 +16,31 @@ public class SmgpDeliverRespFactory {
 
     private static final int PACKAGE_LEN = 26;
 
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(Integer sequenceId) {
+        return new Builder(sequenceId);
     }
 
     public static class Builder {
 
-        private Integer sequenceId;
-
         private String msgId;
 
         private Integer status;
+
+        private Integer sequenceId;
+
+        public Builder(Integer sequenceId) {
+            this.sequenceId = sequenceId;
+        }
+
+        public Builder msgId(String msgId) {
+            this.msgId = msgId;
+            return this;
+        }
+
+        public Builder status(Integer status) {
+            this.status = status;
+            return this;
+        }
 
         public SmgpDeliverResp build() {
             SmgpDeliverResp smgpDeliverResp = new SmgpDeliverResp();
@@ -44,21 +58,6 @@ public class SmgpDeliverRespFactory {
             smgpDeliverResp.setBody(body);
 
             return smgpDeliverResp;
-        }
-
-        public Builder sequenceId(Integer sequenceId) {
-            this.sequenceId = sequenceId;
-            return this;
-        }
-
-        public Builder msgId(String msgId) {
-            this.msgId = msgId;
-            return this;
-        }
-
-        public Builder status(Integer status) {
-            this.status = status;
-            return this;
         }
     }
 }
